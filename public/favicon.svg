@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ToolRecipe logo: a robot in a cooking pot">
+  <rect width="64" height="64" rx="14" fill="#e21833"/>
+  <!-- steam -->
+  <path d="M12 20c-2-3 2-5 0-8M52 20c2-3-2-5 0-8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <!-- antenna -->
+  <line x1="32" y1="13" x2="32" y2="8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="32" cy="7" r="3" fill="#ffd200"/>
+  <!-- robot head -->
+  <rect x="19" y="13" width="26" height="20" rx="6" fill="#ffffff"/>
+  <circle cx="26.5" cy="22" r="3.2" fill="#1a1a1a"/>
+  <circle cx="37.5" cy="22" r="3.2" fill="#1a1a1a"/>
+  <circle cx="27.5" cy="21" r="1" fill="#ffd200"/>
+  <circle cx="38.5" cy="21" r="1" fill="#ffd200"/>
+  <path d="M27 27.5q5 3.5 10 0" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/>
+  <!-- pot -->
+  <rect x="6" y="38" width="9" height="5" rx="2.5" fill="#1a1a1a"/>
+  <rect x="49" y="38" width="9" height="5" rx="2.5" fill="#1a1a1a"/>
+  <path d="M14 36h36v10a9 9 0 0 1-9 9H23a9 9 0 0 1-9-9z" fill="#1a1a1a"/>
+  <rect x="11" y="32" width="42" height="6" rx="3" fill="#1a1a1a"/>
+  <rect x="14" y="43" width="36" height="3.5" fill="#ffd200"/>
+</svg>
