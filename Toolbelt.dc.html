@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<script src="./image-slot.js"></script>
+<style>
+body{margin:0;background:#F7F6F2;color:#16182D;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--p,#4B3FE0)}a:hover{color:var(--ph,#3A2FC4)}
+*{box-sizing:border-box}
+:focus-visible{outline:3px solid var(--p,#4B3FE0);outline-offset:3px;border-radius:12px}
+[data-dark] :focus-visible{outline-color:#D4F24A}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
+</style>
+</helmet>
+<div style="background:{{ outerBg }};min-height:{{ outerMinH }}">
+<div ref="{{ rootRef }}" data-screen-label="{{ screenLabel }}" style="max-width:{{ frameMax }};margin:0 auto;container-type:inline-size;background:#F7F6F2;color:#16182D;font:400 18px/1.5 Inter,system-ui,sans-serif;min-height:{{ outerMinH }};position:relative">
+
+<a href="#tb-main" style="position:absolute;left:-9999px;top:8px;background:#fff;padding:12px 16px;border-radius:12px;z-index:60" style-focus="left:12px">Skip to content</a>
+
+<header style="position:{{ headerPos }};top:0;z-index:40;background:rgba(247,246,242,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(22,24,45,.08)">
+  <div style="max-width:1280px;margin:0 auto;padding:10px clamp(16px,3.5cqw,48px);display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <button onClick="{{ goLanding }}" aria-label="Toolbelt home" style="display:flex;align-items:center;gap:10px;min-height:48px;background:none;border:none;padding:0;cursor:pointer;color:#16182D">
+      <span style="width:36px;height:36px;border-radius:11px;background:#16182D;display:grid;place-items:center"><span style="width:22px;height:8px;border-radius:4px;background:#D4F24A"></span></span>
+      <span style="font:700 23px/1 'Inter Tight',sans-serif;letter-spacing:-0.03em">Toolbelt</span>
+    </button>
+    <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+      <nav aria-label="Main" style="display:flex;align-items:center;gap:4px">
+        <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="4">
+          <button onClick="{{ n.onClick }}" aria-current="{{ n.current }}" style="min-height:48px;padding:0 16px;border-radius:999px;border:none;background:{{ n.bg }};color:#16182D;font:500 16px Inter,sans-serif;cursor:pointer" style-hover="background:#ECEAE3">{{ n.label }}</button>
+        </sc-for>
+        <button onClick="{{ goStart }}" style="margin-left:8px;min-height:48px;padding:0 22px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 16px Inter,sans-serif;cursor:pointer" style-hover="background:var(--ph,#3A2FC4)">Find my tools</button>
+      </nav>
+    </sc-if>
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ toggleMenu }}" aria-expanded="{{ menuOpen }}" aria-controls="tb-menu" style="min-height:48px;min-width:48px;padding:0 16px;border-radius:999px;border:1.5px solid rgba(22,24,45,.18);background:#fff;color:#16182D;font:600 16px Inter,sans-serif;display:flex;align-items:center;gap:8px;cursor:pointer">
+        <span style="display:flex;flex-direction:column;gap:4px"><span style="width:16px;height:2px;background:#16182D;border-radius:2px"></span><span style="width:16px;height:2px;background:#16182D;border-radius:2px"></span><span style="width:16px;height:2px;background:#16182D;border-radius:2px"></span></span>{{ menuLabel }}
+      </button>
+    </sc-if>
+  </div>
+  <sc-if value="{{ showMenu }}" hint-placeholder-val="{{ false }}">
+    <nav id="tb-menu" aria-label="Mobile" style="padding:8px 16px 20px;display:flex;flex-direction:column;gap:4px;border-top:1px solid rgba(22,24,45,.08)">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="4">
+        <button onClick="{{ n.onClick }}" aria-current="{{ n.current }}" style="min-height:52px;text-align:left;padding:0 16px;border-radius:14px;border:none;background:{{ n.bg }};color:#16182D;font:500 18px Inter,sans-serif;cursor:pointer">{{ n.label }}</button>
+      </sc-for>
+      <button onClick="{{ goStart }}" style="margin-top:8px;min-height:52px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 18px Inter,sans-serif;cursor:pointer">Find my tools</button>
+    </nav>
+  </sc-if>
+</header>
+
+<main id="tb-main">
+
+<!-- ============ LANDING ============ -->
+<sc-if value="{{ r.landing }}" hint-placeholder-val="{{ true }}">
+<div>
+  <!-- HERO A: split + floating cards -->
+  <sc-if value="{{ heroA }}" hint-placeholder-val="{{ true }}">
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(28px,6cqw,80px) clamp(20px,3.5cqw,48px) clamp(40px,6cqw,88px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(36px,5cqw,64px);align-items:center">
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:#fff;border:1px solid rgba(22,24,45,.1);font:500 15px Inter,sans-serif">
+        <span style="width:8px;height:8px;border-radius:50%;background:#17733F"></span>Independent guide · vendors can’t pay for placement</span>
+      <h1 style="margin:0;font:700 clamp(40px,5.6cqw,72px)/1.02 'Inter Tight',sans-serif;letter-spacing:-0.035em;text-wrap:balance">Find AI tools that work with what you already use.</h1>
+      <p style="margin:0;font-size:clamp(18px,1.7cqw,21px);line-height:1.5;color:#3D4057;max-width:34em;text-wrap:pretty">Tell us what’s eating your week. We’ll show tools that fit your software, what they really cost, and how to start.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <button onClick="{{ goStart }}" style="min-height:56px;padding:0 30px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 18px Inter,sans-serif;cursor:pointer" style-hover="background:var(--ph,#3A2FC4)">Find my tools</button>
+        <button onClick="{{ goHow }}" style="min-height:56px;padding:0 26px;border-radius:999px;border:1.5px solid rgba(22,24,45,.2);background:#fff;color:#16182D;font:600 18px Inter,sans-serif;cursor:pointer" style-hover="border-color:#16182D">How we rank</button>
+      </div>
+      <p style="margin:0;font-size:15px;color:#4A4D63">Free · about 2 minutes · no account needed</p>
+    </div>
+    <div style="position:relative;height:{{ stageH }}">
+      <div style="position:absolute;inset:36px 0 24px 12%;border-radius:32px;background:#D4F24A"></div>
+      <div style="position:absolute;right:6%;top:58px;width:44%;height:52%;border-radius:22px;overflow:hidden">
+        <image-slot id="hero-a-photo" shape="rounded" radius="22" placeholder="Photo: café owner at the counter"></image-slot>
+      </div>
+      <div style="position:absolute;left:0;top:{{ recTopA }};width:min(330px,86%);background:#fff;border-radius:20px;padding:20px;box-shadow:0 2px 4px rgba(22,24,45,.06),0 18px 40px rgba(22,24,45,.14);display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font:600 14px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#4A4D63">Your recipe</span>
+          <span style="display:inline-flex;align-items:center;padding:2px 10px;border-radius:999px;border:1.5px dashed #5B6170;font:600 14px Inter,sans-serif;color:#5B6170">Sample</span></div>
+        <div style="font:600 22px/1.2 'Inter Tight',sans-serif;letter-spacing:-0.02em">Never miss a dinner-rush call</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#E3F6FD;font:500 15px Inter,sans-serif"><span style="width:10px;height:10px;border-radius:3px;background:#33C4F2"></span>Answers calls</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#F2FBCF;font:500 15px Inter,sans-serif"><span style="width:10px;height:10px;border-radius:3px;background:#A9C62A"></span>Replies to reviews</span>
+        </div>
+        <div style="font-size:15px;color:#4A4D63">Setup about 1 hour · free trial</div>
+      </div>
+      <div style="position:absolute;right:0;top:0;display:inline-flex;align-items:center;gap:10px;padding:10px 18px 10px 10px;border-radius:999px;background:#fff;box-shadow:0 12px 30px rgba(22,24,45,.14);font:600 17px Inter,sans-serif">
+        <span style="width:30px;height:30px;border-radius:50%;background:#17733F;display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Works with Toast</div>
+      <div style="position:absolute;right:4%;bottom:0;width:min(240px,62%);background:#fff;border-radius:20px;padding:18px 20px;box-shadow:0 18px 40px rgba(22,24,45,.16)">
+        <div style="display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums"><span style="font:700 60px/1 'Inter Tight',sans-serif;letter-spacing:-0.04em">$89</span><span style="font:600 20px 'Inter Tight',sans-serif;color:#4A4D63">/mo</span></div>
+        <div style="margin-top:6px;font-size:15px;line-height:1.35;color:#4A4D63">Real monthly total, every fee we found</div>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- HERO B: centered + sky stage with photo -->
+  <sc-if value="{{ heroB }}" hint-placeholder-val="{{ false }}">
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(32px,6cqw,84px) clamp(20px,3.5cqw,48px) clamp(40px,5cqw,72px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px">
+    <h1 style="margin:0;max-width:15ch;font:700 clamp(40px,6.2cqw,80px)/1.0 'Inter Tight',sans-serif;letter-spacing:-0.04em;text-wrap:balance">Find AI tools that work with what you already use.</h1>
+    <p style="margin:0;max-width:36em;font-size:clamp(18px,1.7cqw,21px);color:#3D4057;text-wrap:pretty">Tell us what’s eating your week. We’ll show tools that fit your software, what they really cost, and how to start.</p>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px">
+      <button onClick="{{ goStart }}" style="min-height:56px;padding:0 30px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 18px Inter,sans-serif;cursor:pointer" style-hover="background:var(--ph,#3A2FC4)">Find my tools</button>
+      <button onClick="{{ goHow }}" style="min-height:56px;padding:0 26px;border-radius:999px;border:1.5px solid rgba(22,24,45,.2);background:#fff;color:#16182D;font:600 18px Inter,sans-serif;cursor:pointer">How we rank</button>
+    </div>
+    <div style="position:relative;width:100%;margin-top:clamp(12px,3cqw,32px);height:{{ stageBH }};border-radius:32px;background:#33C4F2;text-align:left">
+      <div style="position:absolute;left:50%;top:clamp(20px,4cqw,40px);bottom:0;transform:translateX(-50%);width:min(440px,70%);border-radius:24px 24px 0 0;overflow:hidden">
+        <image-slot id="hero-b-photo" shape="rect" placeholder="Photo: owner in the kitchen, mid-shift"></image-slot>
+      </div>
+      <div style="position:absolute;left:clamp(12px,4cqw,56px);top:clamp(24px,5cqw,64px);width:min(300px,62%);background:#fff;border-radius:20px;padding:18px;box-shadow:0 18px 40px rgba(22,24,45,.18);display:flex;flex-direction:column;gap:10px">
+        <span style="font:600 14px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#4A4D63">Your recipe</span>
+        <span style="font:600 20px/1.2 'Inter Tight',sans-serif">Never miss a dinner-rush call</span>
+        <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="padding:5px 12px;border-radius:999px;background:#E3F6FD;font:500 15px Inter,sans-serif">Answers calls</span><span style="padding:5px 12px;border-radius:999px;background:#F2FBCF;font:500 15px Inter,sans-serif">Replies to reviews</span></div>
+      </div>
+      <div style="position:absolute;right:clamp(12px,4cqw,56px);top:{{ chipBTop }};display:inline-flex;align-items:center;gap:10px;padding:10px 18px 10px 10px;border-radius:999px;background:#fff;box-shadow:0 12px 30px rgba(22,24,45,.16);font:600 17px Inter,sans-serif">
+        <span style="width:30px;height:30px;border-radius:50%;background:#17733F;display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Works with Toast</div>
+      <div style="position:absolute;right:clamp(12px,6cqw,90px);bottom:clamp(16px,4cqw,48px);background:#D4F24A;border-radius:20px;padding:16px 20px;box-shadow:0 18px 40px rgba(22,24,45,.18)">
+        <div style="display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums"><span style="font:700 56px/1 'Inter Tight',sans-serif;letter-spacing:-0.04em">$89</span><span style="font:600 20px 'Inter Tight',sans-serif">/mo</span></div>
+        <div style="font-size:15px;margin-top:4px">All fees in · sample recipe</div>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- HERO C: problem-first, live preview -->
+  <sc-if value="{{ heroC }}" hint-placeholder-val="{{ false }}">
+  <section style="max-width:1280px;margin:0 auto;padding:clamp(28px,6cqw,80px) clamp(20px,3.5cqw,48px) clamp(40px,6cqw,88px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:clamp(32px,5cqw,64px);align-items:center">
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <h1 style="margin:0;font:700 clamp(40px,5.4cqw,70px)/1.02 'Inter Tight',sans-serif;letter-spacing:-0.035em;text-wrap:balance">Find AI tools that work with what you <span style="background:linear-gradient(transparent 62%,#D4F24A 62%)">already use.</span></h1>
+      <p style="margin:0;font-size:clamp(18px,1.7cqw,21px);color:#3D4057;max-width:32em;text-wrap:pretty">Tell us what’s eating your week. We’ll show tools that fit your software, what they really cost, and how to start.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <button onClick="{{ goStart }}" style="min-height:56px;padding:0 30px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 18px Inter,sans-serif;cursor:pointer" style-hover="background:var(--ph,#3A2FC4)">Find my tools</button>
+        <button onClick="{{ goHow }}" style="min-height:56px;padding:0 26px;border-radius:999px;border:1.5px solid rgba(22,24,45,.2);background:#fff;color:#16182D;font:600 18px Inter,sans-serif;cursor:pointer">How we rank</button>
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:24px;padding:clamp(20px,2.4cqw,28px);box-shadow:0 2px 4px rgba(22,24,45,.05),0 24px 50px rgba(22,24,45,.1);display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="font:600 20px/1.2 'Inter Tight',sans-serif">Try it: what’s eating your week?</span>
+        <span style="font-size:15px;color:#4A4D63">A café using Toast</span>
+      </div>
+      <div role="radiogroup" aria-label="Pick a problem" style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ heroChoices }}" as="c" hint-placeholder-count="3">
+          <button role="radio" aria-checked="{{ c.on }}" onClick="{{ c.onClick }}" style="min-height:56px;display:flex;align-items:center;gap:12px;padding:0 16px;border-radius:16px;border:2px solid {{ c.border }};background:{{ c.bg }};color:#16182D;font:500 17px Inter,sans-serif;text-align:left;cursor:pointer">
+            <span style="width:22px;height:22px;border-radius:50%;border:2px solid {{ c.border }};display:grid;place-items:center;flex:none"><span style="width:10px;height:10px;border-radius:50%;background:{{ c.dot }}"></span></span>“{{ c.label }}”</button>
+        </sc-for>
+      </div>
+      <div style="border-radius:18px;background:#F7F6F2;padding:18px;display:grid;grid-template-columns:1fr auto;gap:12px 16px;align-items:end">
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <span style="font:600 18px 'Inter Tight',sans-serif">{{ heroRes.tool }}</span>
+          <span style="font-size:15px;color:#4A4D63">{{ heroRes.does }}</span>
+          <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:4px 12px 4px 4px;border-radius:999px;background:{{ heroRes.b.bg }};font:500 15px/1.2 Inter,sans-serif"><span style="width:24px;height:24px;border-radius:50%;background:{{ heroRes.b.c }};display:grid;place-items:center;flex:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="{{ heroRes.b.d }}"></path></svg></span>{{ heroRes.b.text }}</span>
+        </div>
+        <div style="text-align:right;font-variant-numeric:tabular-nums">
+          <div style="font:700 52px/1 'Inter Tight',sans-serif;letter-spacing:-0.04em">{{ heroRes.total }}<span style="font:600 18px 'Inter Tight',sans-serif;color:#4A4D63">/mo</span></div>
+          <div style="font-size:14px;color:#4A4D63;margin-top:4px">{{ heroRes.note }}</div>
+        </div>
+      </div>
+      <button onClick="{{ heroGo }}" style="min-height:52px;border-radius:999px;border:none;background:#16182D;color:#fff;font:600 17px Inter,sans-serif;cursor:pointer">See all 3 options for this →</button>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- Industries bento -->
+  <section aria-labelledby="ind-h" style="max-width:1280px;margin:0 auto;padding:clamp(24px,4cqw,48px) clamp(20px,3.5cqw,48px)">
+    <div style="display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:24px">
+      <h2 id="ind-h" style="margin:0;font:700 clamp(30px,3.4cqw,44px)/1.08 'Inter Tight',sans-serif;letter-spacing:-0.03em;max-width:18ch">Built for businesses like yours</h2>
+      <p style="margin:0;color:#4A4D63;max-width:26em">Tap yours. We’ll start with the problems owners like you mention most.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ bentoCols }};grid-template-areas:{{ bentoAreas }};gap:16px">
+      <sc-for list="{{ industries }}" as="i" hint-placeholder-count="4">
+        <button onClick="{{ i.onClick }}" style="grid-area:{{ i.area }};position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:20px;min-height:{{ i.minH }};padding:clamp(20px,2.2cqw,28px);border-radius:24px;border:1px solid rgba(22,24,45,.1);background:{{ i.bg }};color:#16182D;text-align:left;cursor:pointer;overflow:hidden;font-family:Inter,sans-serif" style-hover="transform:translateY(-2px)">
+          <sc-if value="{{ i.photo }}" hint-placeholder-val="{{ false }}">
+            <span style="display:block;width:100%;height:{{ i.photoH }};border-radius:16px;overflow:hidden;pointer-events:none"><image-slot id="{{ i.photoId }}" shape="rounded" radius="16" placeholder="{{ i.photoNote }}"></image-slot></span>
+          </sc-if>
+          <span style="display:flex;flex-direction:column;gap:10px">
+            <span style="font:700 clamp(24px,2.4cqw,30px)/1.1 'Inter Tight',sans-serif;letter-spacing:-0.02em">{{ i.label }}</span>
+            <span style="align-self:flex-start;padding:6px 12px;border-radius:12px;background:rgba(255,255,255,.75);font:500 16px/1.35 Inter,sans-serif">“{{ i.example }}”</span>
+          </span>
+          <span style="display:flex;justify-content:space-between;align-items:center;gap:12px;font:500 15px Inter,sans-serif"><span>Works with {{ i.sys }}</span><span aria-hidden="true" style="width:44px;height:44px;border-radius:50%;background:#16182D;color:#fff;display:grid;place-items:center;font-size:20px;flex:none">→</span></span>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- 3 steps -->
+  <section aria-labelledby="steps-h" style="max-width:1280px;margin:0 auto;padding:clamp(40px,6cqw,80px) clamp(20px,3.5cqw,48px)">
+    <h2 id="steps-h" style="margin:0 0 8px;font:700 clamp(30px,3.4cqw,44px)/1.08 'Inter Tight',sans-serif;letter-spacing:-0.03em">3 steps. About 2 minutes.</h2>
+    <p style="margin:0 0 28px;color:#4A4D63">No jargon, no sign-up.</p>
+    <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px">
+      <li style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 1px 2px rgba(22,24,45,.05),0 8px 24px rgba(22,24,45,.05);display:flex;flex-direction:column;gap:16px">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:50%;background:#D4F24A;display:grid;place-items:center;font:700 17px 'Inter Tight',sans-serif">1</span><span style="font:600 22px 'Inter Tight',sans-serif">Pick your problem</span></span>
+        <span style="display:flex;flex-direction:column;gap:8px">
+          <span style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;border:2px solid var(--p,#4B3FE0);background:var(--pt,#EEEDFC);font:500 16px Inter,sans-serif"><span style="width:20px;height:20px;border-radius:6px;background:var(--p,#4B3FE0);display:grid;place-items:center;flex:none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>I miss calls during the rush</span>
+          <span style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;border:1.5px solid rgba(22,24,45,.14);font:500 16px Inter,sans-serif"><span style="width:20px;height:20px;border-radius:6px;border:2px solid rgba(22,24,45,.3);flex:none"></span>Reviews pile up and I can’t reply</span>
+        </span>
+      </li>
+      <li style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 1px 2px rgba(22,24,45,.05),0 8px 24px rgba(22,24,45,.05);display:flex;flex-direction:column;gap:16px">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:50%;background:#33C4F2;display:grid;place-items:center;font:700 17px 'Inter Tight',sans-serif">2</span><span style="font:600 22px 'Inter Tight',sans-serif">Tap your software</span></span>
+        <span style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <span style="display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;border:2px solid var(--p,#4B3FE0);background:var(--pt,#EEEDFC);font:600 16px Inter,sans-serif"><span style="width:28px;height:28px;border-radius:8px;background:var(--p,#4B3FE0);color:#fff;display:grid;place-items:center;font-size:14px">✓</span>Toast</span>
+          <span style="display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;border:2px solid var(--p,#4B3FE0);background:var(--pt,#EEEDFC);font:600 16px Inter,sans-serif"><span style="width:28px;height:28px;border-radius:8px;background:var(--p,#4B3FE0);color:#fff;display:grid;place-items:center;font-size:14px">✓</span>QuickBooks</span>
+          <span style="display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;border:1.5px solid rgba(22,24,45,.14);font:500 16px Inter,sans-serif"><span style="width:28px;height:28px;border-radius:8px;background:#EEEFF2;display:grid;place-items:center;font:700 14px Inter,sans-serif">Sq</span>Square</span>
+          <span style="display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;border:1.5px solid rgba(22,24,45,.14);font:500 16px Inter,sans-serif"><span style="width:28px;height:28px;border-radius:8px;background:#EEEFF2;display:grid;place-items:center;font:700 14px Inter,sans-serif">Cl</span>Clover</span>
+        </span>
+      </li>
+      <li style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 1px 2px rgba(22,24,45,.05),0 8px 24px rgba(22,24,45,.05);display:flex;flex-direction:column;gap:16px">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;border-radius:50%;background:#16182D;color:#fff;display:grid;place-items:center;font:700 17px 'Inter Tight',sans-serif">3</span><span style="font:600 22px 'Inter Tight',sans-serif">Get a plan</span></span>
+        <span style="display:flex;flex-direction:column;gap:0;border-radius:14px;border:1.5px solid rgba(22,24,45,.12);overflow:hidden;font-size:16px">
+          <span style="display:flex;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(22,24,45,.08)"><span style="font:600 15px Inter,sans-serif;color:#4A4D63;width:52px;font-variant-numeric:tabular-nums">Day 1</span><span style="text-decoration:line-through;color:#4A4D63">Sign up for Hostie AI</span></span>
+          <span style="display:flex;gap:12px;padding:10px 14px;border-bottom:1px solid rgba(22,24,45,.08)"><span style="font:600 15px Inter,sans-serif;color:#4A4D63;width:52px;font-variant-numeric:tabular-nums">Day 3</span><span>Connect it to Toast</span></span>
+          <span style="display:flex;gap:12px;padding:10px 14px;background:#E3F6FD"><span style="font:600 15px Inter,sans-serif;width:52px;font-variant-numeric:tabular-nums">Day 30</span><span>Is it working?</span></span>
+        </span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Dark research band -->
+  <section data-dark="1" aria-labelledby="why-h" style="background:#16182D;color:#fff">
+    <div style="max-width:1280px;margin:0 auto;padding:clamp(48px,7cqw,96px) clamp(20px,3.5cqw,48px)">
+      <h2 id="why-h" style="margin:0 0 clamp(28px,4cqw,48px);font:700 clamp(30px,3.6cqw,48px)/1.08 'Inter Tight',sans-serif;letter-spacing:-0.03em;max-width:20ch">The hard part isn’t the AI. It’s knowing what fits.</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(28px,3cqw,40px)">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+          <figure style="margin:0;display:flex;flex-direction:column;gap:12px;padding-top:20px;border-top:1px solid rgba(255,255,255,.2)">
+            <span style="align-self:flex-start;font:700 clamp(64px,7cqw,96px)/0.95 'Inter Tight',sans-serif;letter-spacing:-0.05em;font-variant-numeric:tabular-nums;background:linear-gradient(transparent 78%,#D4F24A 78%,#D4F24A 92%,transparent 92%)">{{ s.n }}</span>
+            <figcaption style="display:flex;flex-direction:column;gap:10px"><span style="font-size:19px;line-height:1.45;color:#fff">{{ s.text }}</span>
+              <a href="{{ s.url }}" target="_blank" rel="noreferrer" style="color:#C9CBE0;font-size:15px;text-underline-offset:3px">{{ s.src }}</a></figcaption>
+          </figure>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust strip -->
+  <section aria-label="Why owners trust Toolbelt" style="max-width:1280px;margin:0 auto;padding:clamp(32px,5cqw,64px) clamp(20px,3.5cqw,48px)">
+    <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px">
+      <sc-for list="{{ trust }}" as="t" hint-placeholder-count="4">
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:20px;border-radius:20px;background:#fff;border:1px solid rgba(22,24,45,.08)">
+          <span style="width:36px;height:36px;border-radius:12px;background:{{ t.bg }};display:grid;place-items:center;flex:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16182D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ t.d }}"></path></svg></span>
+          <span style="display:flex;flex-direction:column;gap:4px"><strong style="font:600 17px/1.3 Inter,sans-serif">{{ t.title }}</strong><span style="font-size:15px;line-height:1.45;color:#4A4D63">{{ t.text }}</span></span>
+        </li>
+      </sc-for>
+    </ul>
+  </section>
+</div>
+</sc-if>
+
+<!-- ============ PROBLEM PICKER /start ============ -->
+<sc-if value="{{ r.picker }}" hint-placeholder-val="{{ false }}">
+<section style="max-width:880px;margin:0 auto;padding:clamp(24px,4cqw,56px) clamp(20px,3.5cqw,48px) 120px;display:flex;flex-direction:column;gap:28px">
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;gap:6px" aria-hidden="true"><span style="flex:1;height:6px;border-radius:3px;background:var(--p,#4B3FE0)"></span><span style="flex:1;height:6px;border-radius:3px;background:#E2E0D8"></span></div>
+    <span style="font:600 15px Inter,sans-serif;color:#4A4D63">Step 1 of 2</span>
+    <h1 style="margin:0;font:700 clamp(34px,4.4cqw,52px)/1.05 'Inter Tight',sans-serif;letter-spacing:-0.03em">What’s eating your week?</h1>
+  </div>
+  <fieldset style="min-width:0;border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px">
+    <legend style="font:600 19px 'Inter Tight',sans-serif;margin-bottom:12px">Your business</legend>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px">
+      <sc-for list="{{ indTiles }}" as="i" hint-placeholder-count="4">
+        <button role="radio" aria-checked="{{ i.on }}" onClick="{{ i.onClick }}" style="min-height:64px;display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:16px;border:2px solid {{ i.border }};background:{{ i.tint }};color:#16182D;font:600 17px/1.2 Inter,sans-serif;text-align:left;cursor:pointer">
+          <span style="width:20px;height:20px;border-radius:7px;background:{{ i.sw }};border:1px solid rgba(22,24,45,.2);flex:none"></span>{{ i.label }}</button>
+      </sc-for>
+    </div>
+  </fieldset>
+  <fieldset style="min-width:0;border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+    <legend style="font:600 19px 'Inter Tight',sans-serif;margin-bottom:4px">Tap up to 3 <span style="font:500 16px Inter,sans-serif;color:#4A4D63">· {{ pickCount }}</span></legend>
+    <div role="radiogroup" aria-label="Problem area" style="display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;margin-bottom:4px">
+      <sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><button role="radio" aria-checked="{{ c.on }}" onClick="{{ c.onClick }}" style="flex:none;min-height:48px;padding:0 18px;border-radius:999px;border:1.5px solid rgba(22,24,45,.18);background:{{ c.bg }};color:{{ c.fg }};font:600 16px Inter,sans-serif;cursor:pointer">{{ c.label }}</button></sc-for>
+    </div>
+    <sc-for list="{{ probRows }}" as="p" hint-placeholder-count="6">
+      <button role="checkbox" aria-checked="{{ p.on }}" aria-disabled="{{ p.disabled }}" onClick="{{ p.onClick }}" style="min-height:60px;display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:16px;border:2px solid {{ p.border }};background:{{ p.bg }};color:#16182D;font:500 18px/1.3 Inter,sans-serif;text-align:left;cursor:pointer;opacity:{{ p.op }}">
+        <span style="width:26px;height:26px;border-radius:8px;border:2px solid {{ p.border }};background:{{ p.box }};display:grid;place-items:center;flex:none"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        <span style="flex:1">{{ p.label }}</span><span style="font-size:14px;color:#4A4D63">{{ p.cat }}</span></button>
+    </sc-for>
+  </fieldset>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <label for="tb-words" style="font:600 19px 'Inter Tight',sans-serif">Or say it in your own words <span style="font:500 16px Inter,sans-serif;color:#4A4D63">(optional)</span></label>
+    <textarea id="tb-words" value="{{ words }}" onChange="{{ onWords }}" rows="3" placeholder="e.g. We get 20 calls a night and nobody can pick up" style="font:400 18px/1.5 Inter,sans-serif;padding:14px 16px;border-radius:16px;border:1.5px solid rgba(22,24,45,.25);background:#fff;color:#16182D;resize:vertical"></textarea>
+    <sc-if value="{{ wordsHit }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px;color:#17733F;font-weight:600">We also heard: {{ wordsHit }}</span></sc-if>
+  </div>
+  <div style="position:sticky;bottom:0;margin:0 calc(-1 * clamp(20px,3.5cqw,48px));padding:14px clamp(20px,3.5cqw,48px);background:rgba(247,246,242,.95);backdrop-filter:blur(8px);border-top:1px solid rgba(22,24,45,.08);display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <button onClick="{{ goLanding }}" style="min-height:52px;padding:0 20px;border-radius:999px;border:1.5px solid rgba(22,24,45,.2);background:#fff;color:#16182D;font:600 17px Inter,sans-serif;cursor:pointer">Back</button>
+    <button onClick="{{ goProfile }}" disabled="{{ noProbs }}" style="min-height:52px;padding:0 26px;border-radius:999px;border:none;background:{{ nextBg }};color:{{ nextFg }};font:600 17px Inter,sans-serif;cursor:pointer">Next: your software →</button>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ QUICK PROFILE /start ============ -->
+<sc-if value="{{ r.profile }}" hint-placeholder-val="{{ false }}">
+<section style="max-width:880px;margin:0 auto;padding:clamp(24px,4cqw,56px) clamp(20px,3.5cqw,48px) 120px;display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;gap:6px" aria-hidden="true"><span style="flex:1;height:6px;border-radius:3px;background:var(--p,#4B3FE0)"></span><span style="flex:1;height:6px;border-radius:3px;background:var(--p,#4B3FE0)"></span></div>
+    <span style="font:600 15px Inter,sans-serif;color:#4A4D63">Step 2 of 2</span>
+    <h1 style="margin:0;font:700 clamp(34px,4.4cqw,52px)/1.05 'Inter Tight',sans-serif;letter-spacing:-0.03em">A little about your setup</h1>
+  </div>
+  <fieldset style="min-width:0;border:none;margin:0;padding:0">
+    <legend style="font:600 21px 'Inter Tight',sans-serif;margin-bottom:4px">What do you already use?</legend>
+    <p style="margin:0 0 14px;color:#4A4D63;font-size:16px">Tap all that apply. This is how we know what connects.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:10px">
+      <sc-for list="{{ sysTiles }}" as="s" hint-placeholder-count="6">
+        <button role="checkbox" aria-checked="{{ s.on }}" onClick="{{ s.onClick }}" style="min-height:60px;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:16px;border:2px solid {{ s.border }};background:{{ s.bg }};color:#16182D;font:600 16px/1.2 Inter,sans-serif;text-align:left;cursor:pointer">
+          <span style="width:34px;height:34px;border-radius:10px;background:{{ s.iconBg }};color:{{ s.iconFg }};display:grid;place-items:center;font:700 14px Inter,sans-serif;flex:none">{{ s.mark }}</span>{{ s.label }}</button>
+      </sc-for>
+    </div>
+  </fieldset>
+  <sc-for list="{{ profileQs }}" as="q" hint-placeholder-count="3">
+    <fieldset style="min-width:0;border:none;margin:0;padding:0">
+      <legend style="font:600 21px 'Inter Tight',sans-serif;margin-bottom:12px">{{ q.title }}</legend>
+      <div role="radiogroup" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px">
+        <sc-for list="{{ q.opts }}" as="o" hint-placeholder-count="3">
+          <button role="radio" aria-checked="{{ o.on }}" onClick="{{ o.onClick }}" style="min-height:60px;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:10px 16px;border-radius:16px;border:2px solid {{ o.border }};background:{{ o.bg }};color:#16182D;text-align:left;cursor:pointer;font-family:Inter,sans-serif">
+            <span style="font:600 17px/1.25 Inter,sans-serif">{{ o.label }}</span><span style="font-size:15px;color:#4A4D63">{{ o.sub }}</span></button>
+        </sc-for>
+      </div>
+    </fieldset>
+  </sc-for>
+  <div style="position:sticky;bottom:0;margin:0 calc(-1 * clamp(20px,3.5cqw,48px));padding:14px clamp(20px,3.5cqw,48px);background:rgba(247,246,242,.95);backdrop-filter:blur(8px);border-top:1px solid rgba(22,24,45,.08);display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <button onClick="{{ goStart }}" style="min-height:52px;padding:0 20px;border-radius:999px;border:1.5px solid rgba(22,24,45,.2);background:#fff;color:#16182D;font:600 17px Inter,sans-serif;cursor:pointer">Back</button>
+    <button onClick="{{ goResults }}" style="min-height:52px;padding:0 26px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 17px Inter,sans-serif;cursor:pointer">Show my tools →</button>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ RESULTS /results ============ -->
+<sc-if value="{{ r.results }}" hint-placeholder-val="{{ false }}">
+<section style="max-width:1280px;margin:0 auto;padding:clamp(20px,3.5cqw,48px) clamp(16px,3.5cqw,48px) 64px;display:flex;flex-direction:column;gap:24px">
+  <div data-dark="1" style="background:#16182D;color:#fff;border-radius:24px;padding:clamp(20px,3cqw,36px);display:flex;flex-direction:column;gap:14px">
+    <button onClick="{{ goStart }}" style="align-self:flex-start;min-height:48px;padding:0 4px;border:none;background:none;color:#fff;font:600 16px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">← Change my answers</button>
+    <h1 style="margin:0;font:700 clamp(32px,4.2cqw,52px)/1.05 'Inter Tight',sans-serif;letter-spacing:-0.03em;text-wrap:balance">3 ways to fix this for your {{ indNoun }}</h1>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <sc-for list="{{ pickedProbs }}" as="p" hint-placeholder-count="2"><span style="padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.3);font:500 16px Inter,sans-serif">“{{ p }}”</span></sc-for>
+    </div>
+  </div>
+  <div style="background:#fff;border-radius:20px;padding:clamp(16px,2cqw,24px);border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline">
+      <span style="font:600 19px 'Inter Tight',sans-serif">Your software</span>
+      <span style="font-size:15px;color:#4A4D63">Tap to change. Badges, totals and order update right away.</span>
+    </div>
+    <div role="group" aria-label="Software you already use" style="display:flex;flex-wrap:wrap;gap:8px">
+      <sc-for list="{{ sysTiles }}" as="s" hint-placeholder-count="6">
+        <button role="checkbox" aria-checked="{{ s.on }}" onClick="{{ s.onClick }}" style="min-height:48px;display:flex;align-items:center;gap:8px;padding:0 16px 0 8px;border-radius:999px;border:2px solid {{ s.border }};background:{{ s.bg }};color:#16182D;font:600 16px Inter,sans-serif;cursor:pointer">
+          <span style="width:30px;height:30px;border-radius:50%;background:{{ s.iconBg }};color:{{ s.iconFg }};display:grid;place-items:center;font:700 13px Inter,sans-serif">{{ s.mark }}</span>{{ s.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:stretch">
+    <div style="background:#fff;border-radius:20px;padding:20px;border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:12px">
+      <span style="font:600 15px Inter,sans-serif;color:#4A4D63">Your AI starting point</span>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span style="font:700 56px/1 'Inter Tight',sans-serif;letter-spacing:-0.04em;font-variant-numeric:tabular-nums">{{ readyCard.score }}<span style="font:600 18px 'Inter Tight',sans-serif;color:#4A4D63">/100</span></span>
+        <span style="padding:4px 12px;border-radius:999px;background:#E3F6FD;border:1.5px solid #33C4F2;font:600 16px Inter,sans-serif">{{ readyCard.level }}</span>
+      </div>
+      <p style="margin:0;font-size:16px;line-height:1.45">{{ readyCard.plan }} This isn’t a grade.</p>
+      <button onClick="{{ readyCard.toggleWhy }}" aria-expanded="{{ readyCard.showWhy }}" style="align-self:flex-start;min-height:48px;padding:0;border:none;background:none;color:var(--p,#4B3FE0);font:600 16px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">{{ readyCard.whyLabel }}</button>
+      <sc-if value="{{ readyCard.showWhy }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ readyCard.reasons }}" as="x" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="display:flex;justify-content:space-between;font:600 15px Inter,sans-serif"><span>{{ x.label }}</span><span style="font-variant-numeric:tabular-nums">{{ x.pts }}</span></div>
+              <div style="height:8px;border-radius:4px;background:#ECEAE3;overflow:hidden"><div style="height:100%;width:{{ x.pct }};background:var(--p,#4B3FE0)"></div></div>
+              <span style="font-size:14px;color:#4A4D63">{{ x.note }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+    <div style="background:#16182D0A;border-radius:20px;padding:20px;border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span style="font:600 15px Inter,sans-serif;color:#4A4D63">What this may cost you now</span><span style="padding:1px 9px;border-radius:999px;border:1.5px dashed #5B6170;font:600 14px Inter,sans-serif;color:#5B6170">Estimate</span></div>
+      <div style="display:flex;align-items:baseline;font-variant-numeric:tabular-nums"><span style="font:700 56px/1 'Inter Tight',sans-serif;letter-spacing:-0.04em">{{ leak.total }}</span><span style="font:600 20px 'Inter Tight',sans-serif;color:#4A4D63;margin-left:4px">/mo</span></div>
+      <p style="margin:0;font-size:15px;line-height:1.45;color:#4A4D63">Based on {{ leak.basis }}.</p>
+      <button onClick="{{ goDay }}" style="align-self:flex-start;min-height:48px;padding:0;border:none;background:none;color:var(--p,#4B3FE0);font:600 16px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">Use my own numbers →</button>
+    </div>
+    <div style="background:#33C4F2;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:10px">
+      <span style="font:600 15px Inter,sans-serif">Coming up for you</span>
+      <span style="font:700 22px/1.2 'Inter Tight',sans-serif">{{ season.title }}</span>
+      <p style="margin:0;font-size:16px;line-height:1.45">{{ season.why }}</p>
+      <button onClick="{{ season.onAdd }}" disabled="{{ season.disabled }}" style="margin-top:auto;align-self:flex-start;min-height:48px;padding:0 18px;border-radius:999px;border:none;background:#fff;color:#16182D;font:600 16px Inter,sans-serif;cursor:pointer;text-align:left">{{ season.btn }}</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ recipes }}" as="rc" hint-placeholder-count="3">
+      <article aria-label="{{ rc.name }} recipe" style="background:#fff;border-radius:20px;border:2px solid {{ rc.ring }};box-shadow:0 1px 2px rgba(22,24,45,.05),0 12px 30px rgba(22,24,45,.07);display:flex;flex-direction:column;overflow:hidden">
+        <sc-if value="{{ rc.rec }}" hint-placeholder-val="{{ false }}"><div style="background:#D4F24A;padding:8px 20px;font:600 15px Inter,sans-serif;display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:#16182D"></span>Best fit for your setup</div></sc-if>
+        <div style="padding:22px 22px 0;display:flex;flex-direction:column;gap:6px">
+          <h2 style="margin:0;font:700 24px/1.15 'Inter Tight',sans-serif;letter-spacing:-0.02em">{{ rc.name }}</h2>
+          <p style="margin:0;font-size:16px;line-height:1.45;color:#4A4D63">{{ rc.line }}</p>
+        </div>
+        <div style="padding:18px 22px;display:flex;flex-direction:column;gap:4px;font-variant-numeric:tabular-nums">
+          <div style="display:flex;align-items:baseline"><span style="font:700 clamp(64px,7cqw,76px)/0.95 'Inter Tight',sans-serif;letter-spacing:-0.05em">{{ rc.totalEl }}</span><span style="font:700 26px 'Inter Tight',sans-serif;letter-spacing:-0.02em">{{ rc.cents }}</span><span style="font:600 22px 'Inter Tight',sans-serif;color:#4A4D63;margin-left:4px">/mo</span></div>
+          <span style="font-size:15px;color:#4A4D63">{{ rc.totalNote }}</span>
+        </div>
+        <ul style="list-style:none;margin:0;padding:0 22px;display:flex;flex-direction:column;gap:0">
+          <sc-for list="{{ rc.tools }}" as="t" hint-placeholder-count="2">
+            <li style="padding:14px 0;border-top:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline"><span style="font:600 17px/1.3 Inter,sans-serif">{{ t.name }}</span><span style="display:flex;flex-direction:column;align-items:flex-end"><span style="font:600 16px Inter,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap">{{ t.price }}</span><span style="font-size:14px;color:#4A4D63;white-space:nowrap">checked Nov 6</span></span></div>
+              <span style="font-size:15px;line-height:1.4;color:#4A4D63">{{ t.does }}</span>
+              <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:4px 12px 4px 4px;border-radius:999px;background:{{ t.b.bg }};font:500 15px/1.2 Inter,sans-serif"><span style="width:24px;height:24px;border-radius:50%;background:{{ t.b.c }};display:grid;place-items:center;flex:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="{{ t.b.d }}"></path></svg></span>{{ t.b.text }}</span>
+              <div style="display:flex;flex-wrap:wrap;gap:4px 16px">
+                <sc-if value="{{ t.hasFine }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.onFine }}" aria-expanded="{{ t.fineOpen }}" style="min-height:44px;padding:0;border:none;background:none;color:#16182D;font:600 15px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px">{{ t.fineN }}</button></sc-if>
+                <sc-if value="{{ t.canDrive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.onDrive }}" aria-expanded="{{ t.driveOpen }}" style="min-height:44px;padding:0;border:none;background:none;color:var(--p,#4B3FE0);font:600 15px Inter,sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px"><span style="width:22px;height:22px;border-radius:50%;background:var(--p,#4B3FE0);display:grid;place-items:center"><svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"></path></svg></span>{{ t.driveLabel }}</button></sc-if>
+              </div>
+              <sc-if value="{{ t.fineOpen }}" hint-placeholder-val="{{ false }}">
+                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ t.fine }}" as="f" hint-placeholder-count="2">
+                    <li style="padding:10px 12px;border-radius:12px;background:{{ f.bg }};display:flex;flex-direction:column;gap:4px;font-size:15px;line-height:1.4">
+                      <span style="display:flex;align-items:center;gap:6px;font-weight:600"><span style="width:20px;height:20px;border-radius:50%;background:{{ f.c }};display:grid;place-items:center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="{{ f.d }}"></path></svg></span>{{ f.label }}</span>
+                      <span>{{ f.text }}</span>
+                      <a href="{{ f.url }}" target="_blank" rel="noreferrer" style="font-size:14px;color:#16182D">Source: {{ f.src }}</a>
+                    </li>
+                  </sc-for>
+                </ul>
+              </sc-if>
+              <sc-if value="{{ t.driveOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="border-radius:16px;background:#F7F6F2;padding:12px;display:flex;flex-direction:column;gap:8px">
+                  <span style="align-self:flex-start;padding:2px 10px;border-radius:999px;border:1.5px dashed #5B6170;font:600 14px Inter,sans-serif;color:#5B6170">Simulation · scripted call, not the real tool</span>
+                  <sc-for list="{{ t.lines }}" as="l" hint-placeholder-count="4">
+                    <div style="align-self:{{ l.align }};max-width:88%;padding:8px 12px;border-radius:14px;background:{{ l.bg }};border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:2px;font-size:15px;line-height:1.4"><span style="font:600 14px Inter,sans-serif;color:#4A4D63">{{ l.who }}</span>{{ l.text }}</div>
+                  </sc-for>
+                  <div style="display:flex;gap:8px">
+                    <button onClick="{{ t.play }}" style="min-height:48px;padding:0 18px;border-radius:999px;border:none;background:#16182D;color:#fff;font:600 15px Inter,sans-serif;cursor:pointer">Play out loud</button>
+                    <button onClick="{{ t.stop }}" style="min-height:48px;padding:0 18px;border-radius:999px;border:1.5px solid rgba(22,24,45,.2);background:#fff;color:#16182D;font:600 15px Inter,sans-serif;cursor:pointer">Stop</button>
+                  </div>
+                </div>
+              </sc-if>
+            </li>
+          </sc-for>
+        </ul>
+        <div style="margin:4px 22px 0;padding:14px 0;border-top:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:8px">
+          <span style="font:600 16px Inter,sans-serif">Why we picked this</span>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px">
+            <sc-for list="{{ rc.why }}" as="y" hint-placeholder-count="3"><li style="display:flex;gap:8px;align-items:flex-start;font-size:15px;line-height:1.4"><span style="width:20px;height:20px;border-radius:50%;background:{{ y.c }};display:grid;place-items:center;flex:none;margin-top:1px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ y.d }}"></path></svg></span>{{ y.text }}</li></sc-for>
+          </ul>
+          <button onClick="{{ rc.onMap }}" aria-expanded="{{ rc.showMap }}" style="align-self:flex-start;min-height:44px;padding:0;border:none;background:none;color:var(--p,#4B3FE0);font:600 15px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">{{ rc.mapLabel }}</button>
+          <sc-if value="{{ rc.showMap }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:16px;background:#F7F6F2;padding:14px;display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ rc.links }}" as="k" hint-placeholder-count="2">
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) 48px minmax(0,1fr);align-items:center;gap:6px;font-size:14px;line-height:1.3">
+                  <span style="padding:8px 10px;border-radius:12px;background:#fff;border:1px solid rgba(22,24,45,.12);font-weight:600">{{ k.from }}</span>
+                  <span style="position:relative;height:24px;display:grid;place-items:center"><span style="position:absolute;left:0;right:0;top:50%;border-top:{{ k.line }}"></span><span style="position:relative;width:20px;height:20px;border-radius:50%;background:{{ k.c }};display:grid;place-items:center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ k.d }}"></path></svg></span></span>
+                  <span style="padding:8px 10px;border-radius:12px;background:{{ k.toBg }};font-weight:500">{{ k.to }}</span>
+                </div>
+              </sc-for>
+              <span style="font-size:14px;color:#4A4D63">Solid line: connects directly · dashed: through Zapier · dotted: works on its own</span>
+            </div>
+          </sc-if>
+          <span style="font-size:14px;color:#4A4D63">Owners like you: not enough Day-30 check-ins yet</span>
+        </div>
+        <div style="margin:0 22px;padding:14px 0;border-top:1px solid rgba(22,24,45,.08);display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:15px">
+          <span style="display:flex;flex-direction:column"><span style="color:#4A4D63">Setup</span><strong style="font-weight:600">{{ rc.setup }}</strong></span>
+          <span style="display:flex;flex-direction:column"><span style="color:#4A4D63">Try first</span><strong style="font-weight:600">{{ rc.trial }}</strong></span>
+        </div>
+        <div style="margin:0 22px;padding:12px 14px;border-radius:14px;background:#F7F6F2;display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:15px">
+          <span>Could be worth about <strong style="font-variant-numeric:tabular-nums">{{ rc.estNet }}/mo</strong> after cost</span>
+          <span style="padding:1px 9px;border-radius:999px;border:1.5px dashed #5B6170;font:600 14px Inter,sans-serif;color:#5B6170">Estimate</span>
+          <button onClick="{{ rc.onDay }}" style="min-height:44px;padding:0;border:none;background:none;color:var(--p,#4B3FE0);font:600 15px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">See a day with this →</button>
+        </div>
+        <div style="padding:18px 22px 22px;display:flex;gap:10px;flex-wrap:wrap">
+          <button onClick="{{ rc.onStart }}" style="flex:1 1 160px;min-height:52px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 17px Inter,sans-serif;cursor:pointer" style-hover="background:var(--ph,#3A2FC4)">Start this plan</button>
+          <button onClick="{{ goCompare }}" style="flex:0 1 auto;min-height:52px;padding:0 20px;border-radius:999px;border:1.5px solid rgba(22,24,45,.2);background:#fff;color:#16182D;font:600 17px Inter,sans-serif;cursor:pointer">Compare</button>
+        </div>
+      </article>
+    </sc-for>
+  </div>
+  <div style="background:#fff;border-radius:20px;padding:clamp(18px,2cqw,24px);border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:14px">
+    <h2 style="margin:0;font:600 20px 'Inter Tight',sans-serif">What the badges mean</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px">
+      <sc-for list="{{ legend }}" as="l" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:4px 12px 4px 4px;border-radius:999px;background:{{ l.bg }};font:500 15px/1.2 Inter,sans-serif"><span style="width:24px;height:24px;border-radius:50%;background:{{ l.c }};display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="{{ l.d }}"></path></svg></span>{{ l.label }}</span>
+          <span style="font-size:15px;line-height:1.45;color:#4A4D63">{{ l.help }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <p role="status" aria-live="polite" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">{{ liveMsg }}</p>
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <div style="position:sticky;bottom:12px;z-index:6;margin-top:-8px;background:#16182D;color:#fff;border-radius:20px;padding:10px 10px 10px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 12px 30px rgba(22,24,45,.3)" data-dark="1">
+      <span style="display:flex;flex-direction:column;line-height:1.2"><span style="font-size:14px;color:#C9CBE0">Best fit · {{ best.name }}</span><span style="font:700 24px 'Inter Tight',sans-serif;font-variant-numeric:tabular-nums">{{ best.total }}<span style="font-size:15px;font-weight:600;color:#C9CBE0">/mo</span></span></span>
+      <button onClick="{{ best.onStart }}" style="min-height:52px;padding:0 22px;border-radius:999px;border:none;background:#D4F24A;color:#16182D;font:600 16px Inter,sans-serif;cursor:pointer">Start plan</button>
+    </div>
+  </sc-if>
+  <div style="border-radius:20px;padding:clamp(18px,2cqw,24px);border:1.5px dashed rgba(22,24,45,.2);display:flex;flex-direction:column;gap:10px">
+    <sc-if value="{{ needForm }}" hint-placeholder-val="{{ true }}">
+      <form onSubmit="{{ sendNeed }}" style="display:flex;flex-direction:column;gap:10px">
+        <label for="tb-need" style="font:600 20px 'Inter Tight',sans-serif">Didn’t see your problem?</label>
+        <span style="font-size:15px;color:#4A4D63">Tell us in a sentence. We use these to decide which tools to check next.</span>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <input id="tb-need" value="{{ needText }}" onChange="{{ onNeed }}" required="{{ true }}" placeholder="e.g. Ordering supplies takes my whole Monday" style="flex:1 1 260px;min-height:52px;padding:0 16px;border-radius:14px;border:1.5px solid rgba(22,24,45,.25);font:400 17px Inter,sans-serif;color:#16182D;background:#fff">
+          <button type="submit" style="min-height:52px;padding:0 24px;border-radius:999px;border:none;background:#16182D;color:#fff;font:600 16px Inter,sans-serif;cursor:pointer">Send</button>
+        </div>
+      </form>
+    </sc-if>
+    <sc-if value="{{ needSent }}" hint-placeholder-val="{{ false }}"><p role="status" style="margin:0;font:600 17px Inter,sans-serif">Thanks. We read every one.</p></sc-if>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ DAY IN THE LIFE /day ============ -->
+<sc-if value="{{ r.day }}" hint-placeholder-val="{{ false }}">
+<section style="max-width:1280px;margin:0 auto;padding:clamp(20px,3.5cqw,48px) clamp(16px,3.5cqw,48px) 64px;display:flex;flex-direction:column;gap:20px">
+  <button onClick="{{ goResults }}" style="align-self:flex-start;min-height:48px;padding:0 4px;border:none;background:none;color:var(--p,#4B3FE0);font:600 16px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">← Back to my tools</button>
+  <h1 style="margin:0;font:700 clamp(32px,4.2cqw,52px)/1.05 'Inter Tight',sans-serif;letter-spacing:-0.03em;text-wrap:balance">A day at your {{ indNoun }}, with and without help</h1>
+  <div role="radiogroup" aria-label="Recipe" style="display:flex;flex-wrap:wrap;gap:8px">
+    <sc-for list="{{ dayRecipes }}" as="d" hint-placeholder-count="3"><button role="radio" aria-checked="{{ d.on }}" onClick="{{ d.onClick }}" style="min-height:52px;padding:0 18px;border-radius:16px;border:2px solid {{ d.border }};background:{{ d.bg }};color:#16182D;font:600 16px Inter,sans-serif;cursor:pointer;display:flex;gap:10px;align-items:center">{{ d.name }}<span style="font-weight:500;color:#4A4D63;font-variant-numeric:tabular-nums">{{ d.total }}</span></button></sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:{{ planCols }};gap:clamp(20px,3cqw,40px);align-items:start">
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div role="radiogroup" aria-label="Show the day" style="align-self:flex-start;display:flex;padding:4px;border-radius:999px;background:#fff;border:1px solid rgba(22,24,45,.12)">
+        <sc-for list="{{ dayToggle }}" as="d" hint-placeholder-count="2"><button role="radio" aria-checked="{{ d.on }}" onClick="{{ d.onClick }}" style="min-height:48px;padding:0 20px;border-radius:999px;border:none;background:{{ d.bg }};color:{{ d.fg }};font:600 16px Inter,sans-serif;cursor:pointer">{{ d.label }}</button></sc-for>
+      </div>
+      <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ dayEvents }}" as="e" hint-placeholder-count="6">
+          <li style="display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;align-items:start;opacity:{{ e.op }}">
+            <span style="padding-top:14px;font:600 15px Inter,sans-serif;font-variant-numeric:tabular-nums;color:#3D4057">{{ e.time }}</span>
+            <div style="background:{{ e.bg }};border-radius:16px;border:1px solid rgba(22,24,45,.08);padding:12px 14px;display:flex;gap:12px;align-items:flex-start;transition:background .25s">
+              <span style="width:24px;height:24px;border-radius:50%;background:{{ e.dotC }};display:grid;place-items:center;flex:none;margin-top:1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="{{ e.d }}"></path></svg></span>
+              <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:17px;line-height:1.4">{{ e.text }}</span><span style="font:600 14px Inter,sans-serif;color:#4A4D63">{{ e.tag }}</span></span>
+            </div>
+          </li>
+        </sc-for>
+      </ol>
+    </div>
+    <aside style="background:#fff;border-radius:20px;padding:22px;border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font:700 22px 'Inter Tight',sans-serif">Is it worth it?</h2><span style="padding:1px 9px;border-radius:999px;border:1.5px dashed #5B6170;font:600 14px Inter,sans-serif;color:#5B6170">Estimate · your numbers</span></div>
+      <div style="display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums">
+        <span style="font:700 64px/1 'Inter Tight',sans-serif;letter-spacing:-0.05em">{{ dayOut.net }}<span style="font:600 20px 'Inter Tight',sans-serif;color:#4A4D63">/mo</span></span>
+        <span style="font-size:15px;color:#4A4D63">{{ dayOut.netNote }}</span>
+      </div>
+      <dl style="margin:0;display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:16px;font-variant-numeric:tabular-nums;padding:12px 0;border-top:1px solid rgba(22,24,45,.08);border-bottom:1px solid rgba(22,24,45,.08)">
+        <dt style="color:#4A4D63">Calls caught a week</dt><dd style="margin:0;font-weight:600">{{ dayOut.caught }}</dd>
+        <dt style="color:#4A4D63">Time saved a week</dt><dd style="margin:0;font-weight:600">{{ dayOut.hours }}</dd>
+        <dt style="color:#4A4D63">Worth each month</dt><dd style="margin:0;font-weight:600">{{ dayOut.value }}</dd>
+        <dt style="color:#4A4D63">Tools cost each month</dt><dd style="margin:0;font-weight:600">−{{ dayOut.cost }}</dd>
+      </dl>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+        <sc-for list="{{ simFields }}" as="f" hint-placeholder-count="6">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <label for="{{ f.id }}" style="font:600 14px/1.3 Inter,sans-serif">{{ f.label }}</label>
+            <div style="display:flex;align-items:center;gap:6px;min-height:48px;padding:0 12px;border-radius:12px;border:1.5px solid rgba(22,24,45,.25);background:#fff"><input id="{{ f.id }}" type="number" min="0" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;min-width:0;border:none;outline:none;font:600 17px Inter,sans-serif;color:#16182D;background:transparent;font-variant-numeric:tabular-nums"><span style="font-size:14px;color:#4A4D63">{{ f.unit }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin:0;font-size:14px;line-height:1.45;color:#4A4D63">Missed calls × % caught × % that buy × average sale, plus hours × % saved × your hourly value, × 4.33 weeks, minus the tools. The starting percentages are our guesses. Change them to match your business.</p>
+      <button onClick="{{ startDay }}" style="min-height:52px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 17px Inter,sans-serif;cursor:pointer">Start the {{ dayOut.name }} plan</button>
+    </aside>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ COMPARE /compare ============ -->
+<sc-if value="{{ r.compare }}" hint-placeholder-val="{{ false }}">
+<section style="max-width:1280px;margin:0 auto;padding:clamp(20px,3.5cqw,48px) clamp(16px,3.5cqw,48px) 64px;display:flex;flex-direction:column;gap:20px">
+  <button onClick="{{ goResults }}" style="align-self:flex-start;min-height:48px;padding:0 4px;border:none;background:none;color:var(--p,#4B3FE0);font:600 16px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">← Back to my tools</button>
+  <h1 style="margin:0;font:700 clamp(32px,4.2cqw,52px)/1.05 'Inter Tight',sans-serif;letter-spacing:-0.03em">Compare side by side</h1>
+  <p style="margin:0;color:#4A4D63;max-width:36em">Same questions for every option. Prices include every fee we could find for your software.</p>
+  <sc-if value="{{ isDesk }}" hint-placeholder-val="{{ true }}">
+    <div role="table" aria-label="Compare recipes" style="background:#fff;border-radius:20px;border:1px solid rgba(22,24,45,.08);overflow:hidden">
+      <div role="row" style="display:grid;grid-template-columns:220px repeat(3,minmax(0,1fr));border-bottom:1px solid rgba(22,24,45,.1)">
+        <span role="columnheader" style="padding:20px"></span>
+        <sc-for list="{{ recipes }}" as="rc" hint-placeholder-count="3">
+          <div role="columnheader" style="padding:20px;display:flex;flex-direction:column;gap:10px;background:{{ rc.headBg }}">
+            <span style="font:700 22px 'Inter Tight',sans-serif">{{ rc.name }}</span>
+            <sc-if value="{{ rc.rec }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;padding:3px 10px;border-radius:999px;background:#D4F24A;font:600 14px Inter,sans-serif">Best fit</span></sc-if>
+            <button onClick="{{ rc.onStart }}" style="min-height:48px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 16px Inter,sans-serif;cursor:pointer">Start this plan</button>
+          </div>
+        </sc-for>
+      </div>
+      <sc-for list="{{ cmpRows }}" as="row" hint-placeholder-count="7">
+        <div role="row" style="display:grid;grid-template-columns:220px repeat(3,minmax(0,1fr));border-bottom:1px solid rgba(22,24,45,.08)">
+          <span role="rowheader" style="padding:18px 20px;font:600 16px Inter,sans-serif;color:#3D4057">{{ row.label }}</span>
+          <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="3">
+            <span role="cell" style="padding:18px 20px;font:{{ row.font }};font-variant-numeric:tabular-nums;letter-spacing:{{ row.ls }};background:{{ c.bg }};display:flex;align-items:center;gap:8px"><sc-if value="{{ c.d }}" hint-placeholder-val="{{ false }}"><span style="width:22px;height:22px;border-radius:50%;background:{{ c.ic }};display:grid;place-items:center;flex:none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ c.d }}"></path></svg></span></sc-if>{{ c.v }}</span>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="position:sticky;top:{{ cmpStickTop }};z-index:5;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:8px 0;background:#F7F6F2">
+        <sc-for list="{{ recipes }}" as="rc" hint-placeholder-count="3"><span style="padding:10px 8px;border-radius:12px;background:{{ rc.mobHead }};font:700 16px 'Inter Tight',sans-serif;text-align:center">{{ rc.name }}</span></sc-for>
+      </div>
+      <sc-for list="{{ cmpRows }}" as="row" hint-placeholder-count="7">
+        <div style="background:#fff;border-radius:16px;padding:14px;border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:10px">
+          <span style="font:600 15px Inter,sans-serif;color:#3D4057">{{ row.label }}</span>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+            <sc-for list="{{ row.cells }}" as="c" hint-placeholder-count="3"><span style="font:{{ row.mfont }};font-variant-numeric:tabular-nums;letter-spacing:{{ row.ls }};overflow-wrap:anywhere;display:flex;flex-direction:column;gap:4px"><sc-if value="{{ c.d }}" hint-placeholder-val="{{ false }}"><span style="width:20px;height:20px;border-radius:50%;background:{{ c.ic }};display:grid;place-items:center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ c.d }}"></path></svg></span></sc-if>{{ c.v }}</span></sc-for>
+          </div>
+        </div>
+      </sc-for>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+        <sc-for list="{{ recipes }}" as="rc" hint-placeholder-count="3"><button onClick="{{ rc.onStart }}" aria-label="Start the {{ rc.name }} plan" style="min-height:52px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 15px Inter,sans-serif;cursor:pointer">Start</button></sc-for>
+      </div>
+    </div>
+  </sc-if>
+</section>
+</sc-if>
+
+<!-- ============ MY PLAN /plan ============ -->
+<sc-if value="{{ r.plan }}" hint-placeholder-val="{{ false }}">
+<section style="max-width:1280px;margin:0 auto;padding:clamp(20px,3.5cqw,48px) clamp(16px,3.5cqw,48px) 64px;display:grid;grid-template-columns:{{ planCols }};gap:clamp(20px,3cqw,40px);align-items:start">
+  <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font:600 15px Inter,sans-serif;color:#4A4D63">{{ planHead.sub }} · <button onClick="{{ goDay }}" style="min-height:44px;padding:0;border:none;background:none;color:var(--p,#4B3FE0);font:600 15px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">See a day with it</button></span>
+      <h1 style="margin:0;font:700 clamp(32px,4.2cqw,52px)/1.05 'Inter Tight',sans-serif;letter-spacing:-0.03em">Your 30-day plan</h1>
+    </div>
+    <div style="background:#fff;border-radius:20px;padding:20px;border:1px solid rgba(22,24,45,.08);display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:baseline;font-variant-numeric:tabular-nums"><span style="font:700 56px/1 'Inter Tight',sans-serif;letter-spacing:-0.05em">{{ planHead.whole }}</span><span style="font:700 22px 'Inter Tight',sans-serif">{{ planHead.cents }}</span><span style="font:600 20px 'Inter Tight',sans-serif;color:#4A4D63;margin-left:4px">/mo</span></div>
+      <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font:600 16px Inter,sans-serif"><span>{{ planHead.doneText }}</span><span style="font-variant-numeric:tabular-nums">{{ planHead.pct }}</span></div>
+        <div role="progressbar" aria-valuenow="{{ planHead.pctNum }}" aria-valuemin="0" aria-valuemax="100" aria-label="Plan progress" style="height:12px;border-radius:6px;background:#ECEAE3;overflow:hidden"><div style="height:100%;width:{{ planHead.pct }};background:var(--p,#4B3FE0);border-radius:6px;transition:width .3s"></div></div>
+      </div>
+    </div>
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ planSteps }}" as="s" hint-placeholder-count="6">
+        <li style="background:{{ s.bg }};border-radius:18px;border:1px solid rgba(22,24,45,.08);padding:14px 16px;display:flex;gap:14px;align-items:flex-start">
+          <button role="checkbox" aria-checked="{{ s.done }}" aria-label="Mark done: {{ s.title }}" onClick="{{ s.onToggle }}" style="width:48px;height:48px;flex:none;border-radius:14px;border:2px solid {{ s.boxBorder }};background:{{ s.boxBg }};display:grid;place-items:center;cursor:pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{ s.checkC }}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></button>
+          <div style="display:flex;flex-direction:column;gap:4px;min-width:0;padding-top:2px">
+            <span style="align-self:flex-start;padding:2px 10px;border-radius:999px;background:{{ s.dayBg }};font:600 14px Inter,sans-serif;font-variant-numeric:tabular-nums">{{ s.day }}</span>
+            <span style="font:600 18px/1.3 Inter,sans-serif;text-decoration:{{ s.strike }}">{{ s.title }}</span>
+            <span style="font-size:16px;line-height:1.45;color:#4A4D63">{{ s.how }}</span>
+          </div>
+        </li>
+      </sc-for>
+    </ol>
+  </div>
+  <aside style="display:flex;flex-direction:column;gap:16px;position:{{ asidePos }};top:96px">
+    <div style="background:#33C4F2;border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:12px">
+      <h2 style="margin:0;font:700 22px/1.2 'Inter Tight',sans-serif">Free help setting it up</h2>
+      <p style="margin:0;font-size:16px;line-height:1.45">The Maryland Small Business Development Center offers free, confidential advising. SCORE offers free mentors nationwide.</p>
+      <a href="https://www.marylandsbdc.org/consulting" target="_blank" rel="noreferrer" style="min-height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-radius:16px;background:#fff;color:#16182D;font:600 16px Inter,sans-serif;text-decoration:none">Get free setup help (SBDC) <span aria-hidden="true">↗</span></a>
+      <a href="https://www.score.org/find-mentor/request-mentor" target="_blank" rel="noreferrer" style="min-height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-radius:16px;background:#fff;color:#16182D;font:600 16px Inter,sans-serif;text-decoration:none">Request a SCORE mentor <span aria-hidden="true">↗</span></a>
+      <button onClick="{{ toggleShare }}" aria-expanded="{{ shareOpen }}" style="min-height:52px;border-radius:999px;border:none;background:#16182D;color:#fff;font:600 16px Inter,sans-serif;cursor:pointer">Share with my SBDC advisor</button>
+      <sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <span style="font:600 15px Inter,sans-serif;color:#4A4D63">Email preview</span>
+          <p style="margin:0;font-size:15px;line-height:1.5;white-space:pre-line">{{ shareText }}</p>
+          <a href="{{ mailto }}" style="min-height:48px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:var(--p,#4B3FE0);color:#fff;font:600 16px Inter,sans-serif;text-decoration:none">Open in my email</a>
+        </div>
+      </sc-if>
+    </div>
+    <div style="background:#fff;border-radius:20px;padding:22px;border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:12px">
+      <span style="align-self:flex-start;padding:3px 12px;border-radius:999px;background:#33C4F2;font:600 14px Inter,sans-serif">Day 30</span>
+      <h2 style="margin:0;font:700 22px/1.2 'Inter Tight',sans-serif">Check-in: is it working?</h2>
+      <p style="margin:0;font-size:16px;color:#4A4D63">Decide before the next bill. Your answer helps the next owner like you.</p>
+      <div role="radiogroup" aria-label="Day-30 check-in" style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ checkins }}" as="c" hint-placeholder-count="3">
+          <button role="radio" aria-checked="{{ c.on }}" onClick="{{ c.onClick }}" style="min-height:52px;display:flex;align-items:center;gap:12px;padding:0 16px;border-radius:14px;border:2px solid {{ c.border }};background:{{ c.bg }};color:#16182D;font:600 16px Inter,sans-serif;text-align:left;cursor:pointer"><span style="width:20px;height:20px;border-radius:50%;border:2px solid {{ c.border }};display:grid;place-items:center;flex:none"><span style="width:10px;height:10px;border-radius:50%;background:{{ c.dot }}"></span></span>{{ c.label }}</button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ checkinMsg }}" hint-placeholder-val="{{ false }}"><p style="margin:0;padding:12px 14px;border-radius:14px;background:#F7F6F2;font-size:15px">{{ checkinMsg }}</p></sc-if>
+    </div>
+    <div style="background:#fff;border-radius:20px;padding:22px;border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:12px">
+      <h2 style="margin:0;font:700 22px/1.2 'Inter Tight',sans-serif">Price watch</h2>
+      <p style="margin:0;font-size:16px;color:#4A4D63">We re-check vendor price pages every night. Get a heads-up if {{ alertTool }} changes its price.</p>
+      <sc-if value="{{ alertOff }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ submitAlert }}" style="display:flex;flex-direction:column;gap:10px">
+          <div role="radiogroup" aria-label="How should we tell you?" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <sc-for list="{{ alertWhere }}" as="a" hint-placeholder-count="2"><button type="button" role="radio" aria-checked="{{ a.on }}" onClick="{{ a.onClick }}" style="min-height:48px;border-radius:14px;border:2px solid {{ a.border }};background:{{ a.bg }};color:#16182D;font:600 15px Inter,sans-serif;cursor:pointer">{{ a.label }}</button></sc-for>
+          </div>
+          <label for="tb-alert" style="font:600 15px Inter,sans-serif">{{ alertLabel }}</label>
+          <input id="tb-alert" type="{{ alertType }}" autoComplete="{{ alertType }}" required="{{ true }}" placeholder="{{ alertPh }}" style="min-height:52px;padding:0 16px;border-radius:14px;border:1.5px solid rgba(22,24,45,.25);font:400 17px Inter,sans-serif;color:#16182D;background:#fff">
+          <button type="submit" style="min-height:52px;border-radius:999px;border:none;background:#16182D;color:#fff;font:600 16px Inter,sans-serif;cursor:pointer">Turn on price alerts</button>
+        </form>
+      </sc-if>
+      <sc-if value="{{ alertOn }}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px">
+          <span style="display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:4px 12px 4px 4px;border-radius:999px;background:#E6F3EB;font:500 15px Inter,sans-serif"><span style="width:24px;height:24px;border-radius:50%;background:#17733F;display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>Alerts on</span>
+          <button onClick="{{ alertUndo }}" style="min-height:48px;padding:0;border:none;background:none;color:var(--p,#4B3FE0);font:600 15px Inter,sans-serif;cursor:pointer;text-decoration:underline">Turn off</button>
+        </div>
+      </sc-if>
+    </div>
+  </aside>
+</section>
+</sc-if>
+
+<!-- ============ VENDORS /vendors ============ -->
+<sc-if value="{{ r.vendors }}" hint-placeholder-val="{{ false }}">
+<section style="max-width:1280px;margin:0 auto;padding:clamp(24px,4cqw,56px) clamp(16px,3.5cqw,48px) 64px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(24px,4cqw,56px);align-items:start">
+  <div style="display:flex;flex-direction:column;gap:20px">
+    <span style="font:600 15px Inter,sans-serif;color:#4A4D63">For AI tool makers</span>
+    <h1 style="margin:0;font:700 clamp(34px,4.4cqw,56px)/1.03 'Inter Tight',sans-serif;letter-spacing:-0.035em;text-wrap:balance">List your tool. You can’t buy a better spot.</h1>
+    <p style="margin:0;color:#3D4057;font-size:19px;max-width:30em">Toolbelt is free for owners and free for vendors. Every tool is ranked with the same public math.</p>
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ vendorSteps }}" as="v" hint-placeholder-count="3">
+        <li style="display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:18px;background:#fff;border:1px solid rgba(22,24,45,.08)"><span style="width:34px;height:34px;border-radius:50%;background:{{ v.bg }};display:grid;place-items:center;font:700 16px 'Inter Tight',sans-serif;flex:none">{{ v.n }}</span><span style="display:flex;flex-direction:column;gap:2px"><strong style="font-weight:600">{{ v.title }}</strong><span style="font-size:16px;color:#4A4D63">{{ v.text }}</span></span></li>
+      </sc-for>
+    </ol>
+  </div>
+  <div style="background:#fff;border-radius:24px;padding:clamp(20px,2.6cqw,32px);box-shadow:0 1px 2px rgba(22,24,45,.05),0 16px 40px rgba(22,24,45,.08)">
+    <sc-if value="{{ vendorForm }}" hint-placeholder-val="{{ true }}">
+      <form onSubmit="{{ submitVendor }}" style="display:flex;flex-direction:column;gap:18px">
+        <h2 style="margin:0;font:700 24px 'Inter Tight',sans-serif">Submit a tool</h2>
+        <sc-for list="{{ vendorFields }}" as="f" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label for="{{ f.id }}" style="font:600 16px Inter,sans-serif">{{ f.label }}</label>
+            <input id="{{ f.id }}" name="{{ f.id }}" type="{{ f.type }}" autoComplete="off" required="{{ f.req }}" placeholder="{{ f.ph }}" style="min-height:52px;padding:0 16px;border-radius:14px;border:1.5px solid rgba(22,24,45,.25);font:400 18px Inter,sans-serif;color:#16182D;background:#fff">
+            <span style="font-size:14px;color:#4A4D63">{{ f.help }}</span>
+          </div>
+        </sc-for>
+        <fieldset style="min-width:0;border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+          <legend style="font:600 16px Inter,sans-serif;margin-bottom:8px">Works with</legend>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ vendorSys }}" as="s" hint-placeholder-count="6"><button type="button" role="checkbox" aria-checked="{{ s.on }}" onClick="{{ s.onClick }}" style="min-height:48px;padding:0 16px;border-radius:999px;border:2px solid {{ s.border }};background:{{ s.bg }};color:#16182D;font:600 15px Inter,sans-serif;cursor:pointer">{{ s.label }}</button></sc-for>
+          </div>
+          <span style="font-size:14px;color:#4A4D63">We show “Works with” only after we see a public source for it.</span>
+        </fieldset>
+        <button type="submit" style="min-height:56px;border-radius:999px;border:none;background:var(--p,#4B3FE0);color:#fff;font:600 18px Inter,sans-serif;cursor:pointer">Submit for review</button>
+      </form>
+    </sc-if>
+    <sc-if value="{{ vendorSent }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px" role="status">
+        <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:4px 12px 4px 4px;border-radius:999px;background:#EEEFF2;font:500 15px Inter,sans-serif"><span style="width:24px;height:24px;border-radius:50%;background:#5B6170;display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 7v5l3 2"></path></svg></span>Pending verification</span>
+        <h2 style="margin:0;font:700 26px 'Inter Tight',sans-serif">Thanks, we got it.</h2>
+        <p style="margin:0;color:#3D4057">A person checks every price and connection against your public pages. Until then your tool is kept out of recipes. We usually reply within 5 business days.</p>
+        <button onClick="{{ resetVendor }}" style="align-self:flex-start;min-height:48px;padding:0 20px;border-radius:999px;border:1.5px solid rgba(22,24,45,.2);background:#fff;color:#16182D;font:600 16px Inter,sans-serif;cursor:pointer">Submit another</button>
+      </div>
+    </sc-if>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ HOW WE RANK ============ -->
+<sc-if value="{{ r.how }}" hint-placeholder-val="{{ false }}">
+<section style="max-width:1040px;margin:0 auto;padding:clamp(24px,4cqw,56px) clamp(16px,3.5cqw,48px) 64px;display:flex;flex-direction:column;gap:28px">
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:#fff;border:1px solid rgba(22,24,45,.12);font:600 15px Inter,sans-serif"><span style="width:8px;height:8px;border-radius:50%;background:#17733F"></span>Vendors can’t pay for placement</span>
+    <h1 style="margin:0;font:700 clamp(34px,4.4cqw,56px)/1.03 'Inter Tight',sans-serif;letter-spacing:-0.035em">How we rank tools</h1>
+    <p style="margin:0;color:#3D4057;font-size:19px;max-width:34em">Every tool gets the same Match score out of 100, worked out from your answers. Here’s all of the math. Nothing is hidden and nothing is for sale.</p>
+  </div>
+  <div style="background:#fff;border-radius:20px;padding:clamp(18px,2.4cqw,28px);border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:18px">
+    <h2 style="margin:0;font:700 24px 'Inter Tight',sans-serif">The Match score</h2>
+    <sc-for list="{{ weights }}" as="w" hint-placeholder-count="5">
+      <div style="display:grid;grid-template-columns:{{ weightCols }};gap:8px 20px;align-items:center">
+        <span style="font:600 17px Inter,sans-serif">{{ w.label }}</span>
+        <div style="display:flex;align-items:center;gap:12px"><div style="flex:1;height:14px;border-radius:7px;background:#ECEAE3;overflow:hidden"><div style="height:100%;width:{{ w.pct }};background:{{ w.bg }};border-radius:7px"></div></div><span style="font:700 20px 'Inter Tight',sans-serif;font-variant-numeric:tabular-nums;width:72px;text-align:right">{{ w.pts }}</span></div>
+        <span style="font-size:15px;line-height:1.45;color:#4A4D63;grid-column:{{ weightHelpCol }}">{{ w.help }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="background:#fff;border-radius:20px;padding:clamp(18px,2.4cqw,28px);border:1px solid rgba(22,24,45,.08);display:flex;flex-direction:column;gap:14px">
+    <h2 style="margin:0;font:700 24px 'Inter Tight',sans-serif">How we score connections</h2>
+    <p style="margin:0;color:#4A4D63;font-size:16px">Green only when a source we checked shows the connection. Anything we can’t confirm, we say so.</p>
+    <sc-for list="{{ legend }}" as="l" hint-placeholder-count="4">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid rgba(22,24,45,.08)">
+        <span style="display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:4px 12px 4px 4px;border-radius:999px;background:{{ l.bg }};font:500 15px/1.2 Inter,sans-serif"><span style="width:24px;height:24px;border-radius:50%;background:{{ l.c }};display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="{{ l.d }}"></path></svg></span>{{ l.label }}</span>
+        <span style="font:700 18px 'Inter Tight',sans-serif;font-variant-numeric:tabular-nums">{{ l.pts }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px">
+    <sc-for list="{{ promises }}" as="p" hint-placeholder-count="4">
+      <div style="padding:20px;border-radius:20px;background:{{ p.bg }};display:flex;flex-direction:column;gap:6px"><strong style="font:600 18px 'Inter Tight',sans-serif">{{ p.title }}</strong><span style="font-size:16px;line-height:1.45">{{ p.text }}</span></div>
+    </sc-for>
+  </div>
+</section>
+</sc-if>
+
+</main>
+
+<footer style="border-top:1px solid rgba(22,24,45,.1);background:#F7F6F2">
+  <div style="max-width:1280px;margin:0 auto;padding:32px clamp(20px,3.5cqw,48px) 40px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px">
+    <div style="display:flex;flex-direction:column;gap:8px;max-width:30em">
+      <span style="display:flex;align-items:center;gap:10px;font:700 20px 'Inter Tight',sans-serif"><span style="width:28px;height:28px;border-radius:9px;background:#16182D;display:grid;place-items:center"><span style="width:16px;height:6px;border-radius:3px;background:#D4F24A"></span></span>Toolbelt</span>
+      <span style="font-size:15px;color:#4A4D63">A neutral guide to AI tools for small businesses. We don’t make AI tools, and vendors can’t pay for placement. Prices checked Nov 6, 2026.</span>
+    </div>
+    <nav aria-label="Footer" style="display:flex;flex-wrap:wrap;gap:4px 8px;align-items:flex-start">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="4"><button onClick="{{ n.onClick }}" style="min-height:48px;padding:0 12px;border:none;background:none;color:#16182D;font:500 16px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">{{ n.label }}</button></sc-for>
+      <button onClick="{{ startOver }}" style="min-height:48px;padding:0 12px;border:none;background:none;color:#16182D;font:500 16px Inter,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px">Start over</button>
+    </nav>
+  </div>
+</footer>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;screen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;landing&quot;,&quot;picker&quot;,&quot;profile&quot;,&quot;results&quot;,&quot;day&quot;,&quot;compare&quot;,&quot;plan&quot;,&quot;vendors&quot;,&quot;how&quot;],&quot;default&quot;:&quot;landing&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;heroVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;],&quot;default&quot;:&quot;a&quot;,&quot;tsType&quot;:&quot;'a'|'b'|'c'&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;violet&quot;,&quot;teal&quot;,&quot;ink&quot;],&quot;default&quot;:&quot;violet&quot;,&quot;tsType&quot;:&quot;'violet'|'teal'|'ink'&quot;,&quot;section&quot;:&quot;Look&quot;},&quot;frame&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;375&quot;,&quot;1280&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;persist&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+const IND = {
+  restaurant: { label: 'Restaurant & café', noun: 'café', example: 'I miss calls during the rush', sys: 'Toast, Square, Clover', bg: '#D4F24A', tint: '#F2FBCF', defSys: ['toast', 'quickbooks'], photo: 'Photo: owner plating in the kitchen' },
+  hvac: { label: 'Trades & HVAC', noun: 'shop', example: 'I miss calls while I’m on a job', sys: 'Jobber, QuickBooks', bg: '#33C4F2', tint: '#E3F6FD', defSys: ['jobber', 'quickbooks'], photo: 'Photo: tech loading the van' },
+  salon: { label: 'Salon', noun: 'salon', example: 'Clients don’t rebook or don’t show up', sys: 'Vagaro, Square', bg: '#FFFFFF', tint: '#FFFFFF', defSys: ['vagaro', 'square'], photo: 'Photo: stylist at the chair' },
+  landscaping: { label: 'Landscaping', noun: 'crew', example: 'Estimates and quotes take forever', sys: 'Jobber, QuickBooks', bg: '#E6E3D6', tint: '#F1EFE7', defSys: ['jobber', 'quickbooks'], photo: 'Photo: crew lead on a job site' },
+};
+const SYS = {
+  toast: { label: 'Toast', mark: 'To', ind: ['restaurant'] },
+  square: { label: 'Square', mark: 'Sq', ind: ['restaurant', 'hvac', 'salon', 'landscaping'] },
+  clover: { label: 'Clover', mark: 'Cl', ind: ['restaurant', 'salon'] },
+  jobber: { label: 'Jobber', mark: 'Jb', ind: ['hvac', 'landscaping'] },
+  vagaro: { label: 'Vagaro', mark: 'Va', ind: ['salon'] },
+  quickbooks: { label: 'QuickBooks', mark: 'QB', ind: ['restaurant', 'hvac', 'salon', 'landscaping'] },
+  google: { label: 'Google listing', mark: 'G', ind: ['restaurant', 'hvac', 'salon', 'landscaping'] },
+  social: { label: 'Instagram / Facebook', mark: 'IG', ind: ['restaurant', 'hvac', 'salon', 'landscaping'] },
+  paper: { label: 'Paper or nothing yet', mark: '—', ind: ['restaurant', 'hvac', 'salon', 'landscaping'] },
+};
+const CAT = { phones: 'Phones', scheduling: 'Scheduling', money: 'Money', marketing: 'Marketing', office: 'Office work' };
+const PROBS = [
+  { id: 'missed-calls', cat: 'phones', ind: ['restaurant', 'hvac', 'salon', 'landscaping'], label: 'I miss calls when I’m busy', by: { restaurant: 'I miss calls during the rush', hvac: 'I miss calls while I’m on a job', salon: 'I can’t pick up while I’m with a client', landscaping: 'I miss calls while the crew is out' }, kw: ['call', 'phone', 'voicemail', 'ring'] },
+  { id: 'after-hours', cat: 'phones', ind: ['restaurant', 'hvac', 'salon', 'landscaping'], label: 'Customers call after we close', kw: ['night', 'closed', 'weekend', 'late'] },
+  { id: 'phone-orders', cat: 'phones', ind: ['restaurant'], label: 'Phone orders tie up my staff', kw: ['order', 'takeout', 'pickup'] },
+  { id: 'no-shows', cat: 'scheduling', ind: ['salon'], label: 'Clients don’t rebook or don’t show up', kw: ['no-show', 'rebook', 'cancel'] },
+  { id: 'staff-scheduling', cat: 'scheduling', ind: ['restaurant'], label: 'Building the staff schedule takes hours', kw: ['schedule', 'shift', 'staff'] },
+  { id: 'booking-jobs', cat: 'scheduling', ind: ['hvac', 'landscaping'], label: 'Booking and dispatching jobs is messy', kw: ['dispatch', 'booking', 'route'] },
+  { id: 'slow-estimates', cat: 'money', ind: ['hvac', 'landscaping'], label: 'Estimates and quotes take forever', kw: ['estimate', 'quote', 'bid'] },
+  { id: 'invoice-chasing', cat: 'money', ind: ['restaurant', 'hvac', 'salon', 'landscaping'], label: 'I spend time chasing unpaid invoices', kw: ['invoice', 'unpaid', 'overdue'] },
+  { id: 'reviews', cat: 'marketing', ind: ['restaurant', 'hvac', 'salon', 'landscaping'], label: 'Reviews pile up and I can’t reply', kw: ['review', 'yelp', 'stars'] },
+  { id: 'social-posts', cat: 'marketing', ind: ['restaurant', 'hvac', 'salon', 'landscaping'], label: 'I never have time to post on social media', kw: ['instagram', 'facebook', 'post', 'social'] },
+  { id: 'bookkeeping', cat: 'office', ind: ['restaurant', 'hvac', 'salon', 'landscaping'], label: 'Bookkeeping eats my evenings', kw: ['receipts', 'books', 'taxes', 'bookkeeping'] },
+  { id: 'food-costs', cat: 'office', ind: ['restaurant'], label: 'I don’t know my real food costs', kw: ['food cost', 'supplier', 'sysco', 'margin'] },
+];
+const T = {
+  rosie: { name: 'Rosie', does: 'Answers calls day and night and texts you a summary.', price: 49, works: {}, standalone: true, setup: 30, trial: '7-day free trial', cancel: true },
+  hostie: { name: 'Hostie AI', does: 'Answers calls and takes orders and reservations.', price: 199, works: { toast: 'native', square: 'native' }, setup: 60, trial: null, cancel: null },
+  intuit: { name: 'QuickBooks AI (Intuit Assist)', does: 'Sorts expenses and follows up on unpaid invoices.', price: 0, note: 'Included', works: { quickbooks: 'native', jobber: 'native' }, requires: 'quickbooks', setup: 15, trial: 'Already in QuickBooks', cancel: true },
+  maplepro: { name: 'Maple Pro', does: 'Answers calls and sends phone orders straight to your POS.', price: 350, works: { toast: 'native', square: 'native', clover: 'native' }, setup: 1440, trial: null, cancel: false },
+  xtrachef: { name: 'xtraCHEF by Toast', does: 'Reads supplier invoices and tracks food costs.', price: 179, works: { toast: 'native' }, requires: 'toast', setup: 240, trial: null, cancel: null },
+  nicejob: { name: 'NiceJob', does: 'Asks happy customers for reviews at the right moment.', price: 75, works: { google: 'native', jobber: 'zapier', quickbooks: 'zapier', square: 'zapier' }, setup: 45, trial: '14-day free trial', cancel: true },
+  jobberai: { name: 'Jobber AI Receptionist', does: 'Answers calls and books jobs right into Jobber.', price: 29, works: { jobber: 'native' }, requires: 'jobber', setup: 30, trial: null, cancel: true },
+  fastest: { name: 'FastEstimate', does: 'Turns your job notes into a clean estimate.', price: 19, works: {}, standalone: true, setup: 15, trial: 'Free for 3 estimates/mo', cancel: true },
+  goodcall: { name: 'Goodcall', does: 'Answers calls, books jobs, and sends you the details.', price: 79, works: { jobber: 'native', google: 'native' }, setup: 60, trial: '14-day free trial', cancel: true },
+  estimatic: { name: 'Estimatic AI', does: 'Builds estimates from photos and your price list.', price: 49, works: { quickbooks: 'native' }, setup: 45, trial: 'Free plan', cancel: true },
+  sameday: { name: 'Sameday AI', does: 'Answers and books calls for home-service shops.', price: 449, works: { jobber: 'native' }, setup: 15, trial: null, cancel: null },
+  vera: { name: 'Vagaro AI (Vera)', does: 'Fills empty slots and nudges clients to rebook.', price: 0, note: 'Included', works: { vagaro: 'native' }, requires: 'vagaro', setup: 20, trial: '30-day free trial', cancel: true },
+  canva: { name: 'Canva Pro', does: 'Turns a photo and a sentence into a social post.', price: 15, works: { social: 'native' }, standalone: true, setup: 15, trial: 'Free plan', cancel: true },
+  bookingbee: { name: 'BookingBee.ai', does: 'Answers calls and books appointments for you.', price: 79, works: { square: 'native', vagaro: 'native' }, setup: 60, trial: null, cancel: null },
+  agentzap: { name: 'AgentZap', does: 'Answers calls, books, and texts reminders.', price: 109, works: { square: 'native', vagaro: 'native' }, setup: 120, trial: null, cancel: null },
+  siterecon: { name: 'SiteRecon', does: 'Measures properties from the map for faster quotes.', price: 39, works: { jobber: 'native' }, setup: 60, trial: '30-day free trial', cancel: true },
+};
+const ZAP = 29.99;
+const PHONE = ['missed-calls', 'after-hours', 'phone-orders'];
+const COVERS = {
+  rosie: PHONE, hostie: PHONE, maplepro: PHONE, sameday: [...PHONE, 'booking-jobs'], bookingbee: PHONE, agentzap: [...PHONE, 'no-shows'],
+  goodcall: [...PHONE, 'booking-jobs'], jobberai: [...PHONE, 'booking-jobs'], intuit: ['bookkeeping', 'invoice-chasing'], xtrachef: ['food-costs'],
+  nicejob: ['reviews'], fastest: ['slow-estimates'], estimatic: ['slow-estimates'], siterecon: ['slow-estimates'], vera: ['no-shows'], canva: ['social-posts'],
+};
+const DRIVE = ['rosie', 'hostie', 'maplepro', 'sameday', 'bookingbee', 'agentzap', 'goodcall', 'jobberai'];
+const KIND = {
+  good: { label: 'Good to know', bg: '#E6F3EB', c: '#17733F', d: 'M5 12.5l4.5 4.5L19 7.5' },
+  fees: { label: 'Extra fees', bg: '#FBF0DC', c: '#9A5B00', d: 'M12 4v16M8 8h6a2 2 0 010 4h-4a2 2 0 000 4h6' },
+  contract: { label: 'Contract', bg: '#FBE8E5', c: '#C2362B', d: 'M7 4h10v16H7zM10 9h4M10 13h4' },
+  watch: { label: 'Watch out', bg: '#EEEFF2', c: '#5B6170', d: 'M12 7v6M12 17h.01' },
+  data: { label: 'Your data', bg: '#E3F6FD', c: '#16182D', d: 'M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z' },
+};
+const FINE = {
+  rosie: [['fees', 'Plans are metered by minutes, so long calls use up your plan', 'Macha: Rosie guide', 'https://www.getmacha.com/blog/rosie-complete-guide'], ['watch', 'Answers incoming calls only; it won’t call customers back', 'CloudTalk: Rosie review', 'https://www.cloudtalk.io/blog/rosie-ai-review/']],
+  hostie: [['watch', 'Some listings mention per-minute charges on top of the plan', 'Hostie buyer’s guide', 'https://hostie.ai/resources/2025-buyers-guide-top-7-ai-phone-ordering-systems-small-restaurants-under-300-month']],
+  goodcall: [['good', 'Unlimited call minutes on every plan', 'CloudTalk: Goodcall pricing', 'https://www.cloudtalk.io/blog/goodcall-pricing/'], ['fees', '$0.50 for each caller after 100 different callers a month', 'CloudTalk: Goodcall pricing', 'https://www.cloudtalk.io/blog/goodcall-pricing/']],
+  jobberai: [['fees', '$0.79 per conversation after the first 30', 'Carly: Jobber AI Receptionist', 'https://www.usecarly.com/blog/jobber-ai-receptionist/']],
+  sameday: [['good', 'Sameday says no contracts', 'Sameday', 'https://sameday.ai/post/best-virtual-receptionist-for-servicetitan-why-contractors-choose-sameday'], ['watch', 'Prices aren’t published; this figure is from a third party', 'Sameday', 'https://sameday.ai/post/best-virtual-receptionist-for-servicetitan-why-contractors-choose-sameday']],
+  agentzap: [['fees', '$499 one-time setup fee', 'Stork: salon receptionists', 'https://www.stork.ai/blog/ai-receptionist-for-salons-2026']],
+  nicejob: [['good', 'No contract', 'FitGap: NiceJob', 'https://us.fitgap.com/products/nicejob'], ['fees', 'AI-written review replies need the $125/mo Pro plan', 'SoftwareSuggest: NiceJob', 'https://www.softwaresuggest.com/nicejob/pricing']],
+  fastest: [['good', 'Cancel anytime; free plan for 3 estimates a month', 'Capterra: FastEstimate', 'https://www.capterra.com/p/10043845/FastEstimate/']],
+  canva: [['fees', 'AI features draw from a monthly allowance of uses', 'CostBench: Canva AI', 'https://www.costbench.com/software/ai-image-generators/canva-ai/']],
+  maplepro: [['contract', 'The lower $220/mo price needs a yearly plan', 'Maple pricing', 'https://www.maple.inc/pricing']],
+};
+const SEASON = {
+  restaurant: ['Holiday party season is coming', 'Calls for party bookings and catering usually pick up, often during your busiest service hours.', 'missed-calls'],
+  hvac: ['The first cold snap is coming', 'Furnace calls usually spike on the first cold nights, often after hours.', 'after-hours'],
+  salon: ['Holiday party and New Year’s looks', 'Booking calls usually jump while you’re busy with clients in the chair.', 'missed-calls'],
+  landscaping: ['Off-season is coming', 'Asking happy customers for reviews now usually pays off when spring searches start.', 'reviews'],
+};
+const BIZ = { restaurant: 'Corner Table Café', hvac: 'Dalton Heating & Air', salon: 'Studio June', landscaping: 'Greenline Lawn Co.' };
+const SCRIPT = {
+  restaurant: [['Caller', 'Hi, are you open tonight? Could I get a table for four at seven?'], ['AI', 'Thanks for calling {biz}! We’re open until ten. I can book four people at seven. What name should I put it under?'], ['Caller', 'Maria.'], ['AI', 'You’re all set, Maria. Table for four at seven tonight. I’ll text you a confirmation.']],
+  hvac: [['Caller', 'Hi, my furnace stopped working and it’s getting cold in here.'], ['AI', 'Sorry to hear that. This is {biz}. Is anyone in the home without heat who’s elderly or very young?'], ['Caller', 'No, just me.'], ['AI', 'Okay. I can get a technician to you tomorrow between eight and ten. I’ve sent the details to the team and texted you a confirmation.']],
+  salon: [['Caller', 'Hi, do you have anything for a cut and color this Saturday?'], ['AI', 'Hi, thanks for calling {biz}! Jordan has an opening at eleven on Saturday. Would you like it?'], ['Caller', 'Yes please.'], ['AI', 'Booked. You’ll get a reminder the day before. See you Saturday!']],
+  landscaping: [['Caller', 'Hi, I’d like a quote for weekly mowing.'], ['AI', 'Happy to help. This is {biz}. What’s the address of the property?'], ['Caller', '42 Oak Lane.'], ['AI', 'Thanks. I’ve passed this to the owner, who’ll send a quote by tomorrow. Anything else I can note?']],
+};
+const SIMDEF = { restaurant: [45, 25, 'Average phone order'], hvac: [350, 40, 'Average job'], salon: [75, 30, 'Average appointment'], landscaping: [250, 35, 'Average job'] };
+const DAY = {
+  restaurant: [['9:30 am', 'food-costs', 'Types supplier invoices into a spreadsheet', '{tool} reads the invoice photos; you check the totals'], ['12:15 pm', 'missed-calls', 'Lunch rush: 3 calls ring out to voicemail', '{tool} answers all 3 and handles the questions'], ['6:45 pm', 'phone-orders', 'Dinner rush: a host is stuck on the phone taking orders', '{tool} takes the orders and sends them to the kitchen'], ['9:30 pm', 'after-hours', 'Closed: callers asking about tomorrow hang up', '{tool} answers after close and books tables'], ['10:30 pm', 'bookkeeping', 'Sorts the day’s receipts at the bar', '{tool} sorts them; you glance at the totals'], ['11:30 pm', 'reviews', 'Replies to reviews one by one at midnight', '{tool} asks happy guests for reviews']],
+  hvac: [['7:30 am', 'booking-jobs', 'Juggles the day’s jobs on paper and texts techs', '{tool} books calls straight onto the schedule'], ['10:00 am', 'missed-calls', 'In an attic: 2 calls go to voicemail, one calls a competitor', '{tool} answers both and books the repair'], ['1:00 pm', 'slow-estimates', 'Writes an estimate in the truck for 40 minutes', '{tool} drafts it; you adjust and send'], ['4:00 pm', 'invoice-chasing', 'Calls customers about unpaid invoices', '{tool} sends polite payment reminders'], ['8:30 pm', 'after-hours', 'A no-heat call at night goes to voicemail', '{tool} answers and flags the emergency'], ['9:30 pm', 'reviews', 'Forgets to ask happy customers for reviews', '{tool} asks for a review after each job']],
+  salon: [['9:00 am', 'no-shows', 'A 9 am no-show leaves the chair empty', '{tool} sent a reminder and filled the slot'], ['11:30 am', 'missed-calls', 'With a client: 2 booking calls go unanswered', '{tool} answers and books both'], ['2:00 pm', 'social-posts', 'Means to post the morning’s color work; no time', '{tool} turns the photo into a post'], ['8:00 pm', 'after-hours', 'Evening calls for appointments go to voicemail', '{tool} answers and books the appointment'], ['9:00 pm', 'reviews', 'Unanswered reviews pile up', '{tool} asks for reviews']],
+  landscaping: [['7:00 am', 'booking-jobs', 'Rebuilds the crew schedule after a rain day', '{tool} books new jobs onto the schedule'], ['10:30 am', 'missed-calls', 'Mowing: 3 calls for quotes go to voicemail', '{tool} answers and collects the property details'], ['1:00 pm', 'slow-estimates', 'Drives to a property to measure it for a quote', '{tool} measures it from aerial images'], ['4:00 pm', 'invoice-chasing', 'Chases last month’s unpaid invoices', '{tool} sends payment reminders'], ['9:00 pm', 'reviews', 'Never gets around to asking for reviews', '{tool} asks after each finished job']],
+};
+const RECIPES = {
+  restaurant: [
+    { key: 'simple', name: 'Simple', line: 'The low-cost start: catch every call, tidy books.', tools: ['rosie', 'intuit'], hours: 3, who: 'You want to try AI for less than a night’s tips' },
+    { key: 'balanced', name: 'Balanced', line: 'Calls turn into orders in your POS. Books stay tidy.', tools: ['hostie', 'intuit'], hours: 6, who: 'Calls are your biggest leak' },
+    { key: 'allin', name: 'All-in', line: 'Phones, food costs and reviews, handled.', tools: ['maplepro', 'xtrachef', 'nicejob'], hours: 10, who: 'You’re ready to change how the week runs' },
+  ],
+  hvac: [
+    { key: 'simple', name: 'Simple', line: 'Answer calls on the job and quote faster.', tools: ['jobberai', 'fastest'], hours: 4, who: 'You want results this week' },
+    { key: 'balanced', name: 'Balanced', line: 'Every call booked, estimates from photos.', tools: ['goodcall', 'estimatic'], hours: 7, who: 'You quote most jobs yourself' },
+    { key: 'allin', name: 'All-in', line: 'A full AI front desk plus reviews.', tools: ['sameday', 'estimatic', 'nicejob'], hours: 11, who: 'You run 2+ trucks' },
+  ],
+  salon: [
+    { key: 'simple', name: 'Simple', line: 'Use what Vagaro already has, plus easy posts.', tools: ['vera', 'canva'], hours: 3, who: 'You want to spend almost nothing' },
+    { key: 'balanced', name: 'Balanced', line: 'Calls booked while you’re with a client.', tools: ['bookingbee', 'vera'], hours: 5, who: 'The phone rings mid-appointment' },
+    { key: 'allin', name: 'All-in', line: 'Phones, reviews and posts on autopilot.', tools: ['agentzap', 'nicejob', 'canva'], hours: 8, who: 'You have 3+ chairs' },
+  ],
+  landscaping: [
+    { key: 'simple', name: 'Simple', line: 'Catch calls from the field, quote faster.', tools: ['jobberai', 'fastest'], hours: 4, who: 'You want results this week' },
+    { key: 'balanced', name: 'Balanced', line: 'Calls booked, properties measured from the map.', tools: ['goodcall', 'siterecon'], hours: 7, who: 'Quotes eat your evenings' },
+    { key: 'allin', name: 'All-in', line: 'Calls, quotes, reviews and books, together.', tools: ['goodcall', 'siterecon', 'nicejob', 'intuit'], hours: 11, who: 'You’re growing past one crew' },
+  ],
+};
+const ST = {
+  verified: { c: '#17733F', bg: '#E6F3EB', d: 'M5 12.5l4.5 4.5L19 7.5', label: 'Works with [your system]', help: 'A source we checked shows a direct connection. Info flows in on its own.', pts: '25 pts' },
+  zapier: { c: '#9A5B00', bg: '#FBF0DC', d: 'M13 3L5 14h6l-1 7 8-11h-6z', label: 'Works through Zapier', help: 'Connects through Zapier, a go-between app. We add its $29.99/mo to your total.', pts: '15 pts' },
+  manual: { c: '#5B6170', bg: '#EEEFF2', d: 'M4 20l4-1L19 8l-3-3L5 16z', label: 'Manual setup', help: 'Works on its own, like forwarding calls. Nothing is sent into your software automatically.', pts: '15 pts' },
+  none: { c: '#C2362B', bg: '#FBE8E5', d: 'M7 7l10 10M17 7L7 17', label: 'Doesn’t connect', help: 'Documented as not working with the software you tapped.', pts: '0 pts' },
+};
+const PLAN_T = {
+  phones: [[1, 'Sign up for {tool}', 'Start the trial or plan. Have your hours, menu or services, and prices handy.'], [2, 'Teach it your business', 'Add your hours, prices, and the 5 questions customers ask most.'], [3, 'Connect it to {system}', 'Follow the connection steps so calls turn into orders or bookings on their own.'], [4, 'Test it yourself', 'Call your own number from another phone. Ask a normal question, then something it shouldn’t handle.'], [5, 'Forward your calls', 'Start with “forward when we don’t answer” so staff still pick up when they can.'], [14, 'Read two weeks of call summaries', 'Fix any wrong answers. Count calls it caught that would have gone to voicemail.']],
+  scheduling: [[1, 'Sign up for {tool}', 'Start the trial or turn it on in your account.'], [2, 'Connect it to {system}', 'Link it so staff, clients, or bookings stay in one place.'], [4, 'Set your rules', 'Pick reminder timing, who gets messaged, and which hours are open.'], [7, 'Run it for one week', 'Check every message before it goes out.'], [14, 'Compare to last month', 'Count no-shows, rebookings, or hours spent scheduling.']],
+  money: [[1, 'Sign up for {tool}', 'Start the trial or turn it on in your account.'], [2, 'Connect it to {system}', 'Link your customer list and price list so you don’t retype anything.'], [3, 'Make one real estimate or invoice', 'Do one job start to finish and check every number.'], [7, 'Turn on automatic follow-ups', 'Set a polite reminder for unpaid invoices or unsigned quotes.'], [14, 'Check the time saved', 'Compare how long this took before and after.']],
+  marketing: [[1, 'Sign up for {tool}', 'Start the trial or plan.'], [2, 'Connect your Google listing', 'This lets it ask the right people for reviews.'], [3, 'Set your voice', 'Write 2–3 sentences about how you talk to customers.'], [7, 'Approve the first week of messages', 'Read every request, reply, or post before it goes out.'], [21, 'Check your numbers', 'Count new reviews, replies, or posts this month.']],
+  office: [[1, 'Sign up for {tool}', 'Start the trial or turn it on in your account.'], [2, 'Connect it to {system}', 'Link your accounting or POS so numbers flow in.'], [3, 'Try it on one real task', 'One invoice, one week of receipts, or one email. Check it carefully.'], [10, 'Make it a habit', 'Pick one time each week to let the tool handle this.'], [21, 'Check the time saved', 'Write down how long this takes now.']],
+};
+const FINAL = [30, 'Day-30 check-in: is it working?', 'Keep it, change the settings, or cancel before the next bill.'];
+const KEY = 'toolbelt-proto-v1';
+const PAL = { violet: ['#4B3FE0', '#3A2FC4', '#EEEDFC', '#9C98C9'], teal: ['#0E6470', '#0A4E58', '#E1F0F2', '#8DB5BB'], ink: ['#16182D', '#2A2D48', '#E9E9EE', '#9A9BA8'] };
+const ROUTES = { day: 'Day in the life /day', landing: 'Landing /', picker: 'Problem picker /start', profile: 'Quick profile /start', results: 'Results /results', compare: 'Compare /compare', plan: 'My plan /plan', vendors: 'Vendors /vendors', how: 'How we rank /how-we-rank' };
+
+class Tween extends React.Component {
+  constructor(p) { super(p); this.state = { v: p.value }; }
+  componentDidUpdate(pp) {
+    if (pp.value === this.props.value) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    cancelAnimationFrame(this.raf);
+    if (reduce) { this.setState({ v: this.props.value }); return; }
+    const from = this.state.v, to = this.props.value, t0 = performance.now();
+    const step = (t) => { const k = Math.min(1, (t - t0) / 500); const e = 1 - Math.pow(1 - k, 3); this.setState({ v: from + (to - from) * e }); if (k < 1) this.raf = requestAnimationFrame(step); };
+    this.raf = requestAnimationFrame(step);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); }
+  render() { return '$' + Math.round(this.state.v).toLocaleString(); }
+}
+const money = (n) => (n % 1 === 0 ? '$' + n.toLocaleString() : '$' + n.toFixed(2));
+const setupText = (m) => (m <= 60 ? 'About 1 hour' : m <= 240 ? 'An afternoon' : m <= 1440 ? 'About a day' : m <= 4320 ? '2–3 days' : '1–2 weeks with the vendor');
+
+function badge(t, S) {
+  const lab = (id) => SYS[id].label;
+  const real = S.filter((s) => s !== 'paper');
+  const nat = real.filter((s) => t.works[s] === 'native');
+  if (nat.length) return { k: 'verified', text: 'Works with ' + nat.slice(0, 2).map(lab).join(' + ') };
+  const zap = real.filter((s) => t.works[s] === 'zapier');
+  if (zap.length) return { k: 'zapier', text: 'Works through Zapier', sys: zap[0] };
+  if (t.requires && !S.includes(t.requires)) return { k: 'none', text: 'Doesn’t connect · needs ' + lab(t.requires) };
+  const core = real.filter((s) => s !== 'google' && s !== 'social');
+  if (!t.standalone && core.length && Object.keys(t.works).length) return { k: 'none', text: 'Doesn’t connect to ' + lab(core[0]) };
+  return { k: 'manual', text: 'Manual setup' };
+}
+const SCORE = { verified: 3, zapier: 2, manual: 1.5, none: -2 };
+
+class Component extends DCLogic {
+  rootRef = React.createRef();
+  constructor(props) {
+    super(props);
+    let saved = null;
+    if (props.persist !== false) { try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {} }
+    this.state = Object.assign({
+      route: props.screen || 'landing', ind: 'restaurant', probs: ['missed-calls', 'reviews'], words: '', sys: ['toast', 'quickbooks'],
+      size: 'small', budget: '150', comfort: '2', planKey: 'balanced', done: ['s0', 's1'], checkin: null, menu: false,
+      vendorSent: false, vendorSys: [], share: false, heroPick: 'missed-calls', w: props.frame === '375' ? 375 : props.persist === false ? 0 : 1280,
+      cat: 'all', setupTime: '1', fine: '', drive: '', driveLine: -1, needText: '', needSent: false, dayKey: '', dayAfter: true, sim: {}, alertOn: false, alertWhere: 'email', showWhy: false,
+    }, saved || {}, props.persist === false && props.screen ? { route: props.screen } : {});
+  }
+  componentDidMount() { this.ensureObs(); this.applyPal(); }
+  measure() {
+    const el = this.rootRef.current; if (!el) return;
+    const w = Math.round(el.getBoundingClientRect().width || el.offsetWidth || 0);
+    if (w && w !== this.state.w) this.setState({ w });
+  }
+  ensureObs() {
+    const el = this.rootRef.current;
+    if (!el) { if (!this.retry) this.retry = requestAnimationFrame(() => { this.retry = 0; this.ensureObs(); this.applyPal(); }); return; }
+    if (this.obsEl === el) return;
+    this.ro && this.ro.disconnect();
+    this.obsEl = el;
+    if (window.ResizeObserver) { this.ro = new ResizeObserver(() => this.measure()); this.ro.observe(el); }
+    this.measure();
+    requestAnimationFrame(() => this.measure());
+  }
+  applyPal() {
+    const el = this.rootRef.current; if (!el) return;
+    const P = PAL[this.props.palette] || PAL.violet;
+    el.style.setProperty('--p', P[0]); el.style.setProperty('--ph', P[1]); el.style.setProperty('--pt', P[2]); el.style.setProperty('--pd', P[3]);
+  }
+  componentWillUnmount() { this.ro && this.ro.disconnect(); }
+  componentDidUpdate(pp) {
+    this.ensureObs();
+    if (pp.palette !== this.props.palette || this.palEl !== this.rootRef.current) { this.palEl = this.rootRef.current; this.applyPal(); }
+    if (pp.screen !== this.props.screen && this.props.screen) this.setState({ route: this.props.screen });
+    if (this.props.persist !== false) {
+      const { w, menu, share, ...rest } = this.state;
+      try { localStorage.setItem(KEY, JSON.stringify(rest)); } catch (e) {}
+    }
+  }
+  go = (route) => {
+    this.setState({ route, menu: false });
+    if (this.props.persist !== false) { try { window.scrollTo({ top: 0 }); } catch (e) {} }
+  };
+  toggle(arr, id) { return arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id]; }
+  setInd(ind) { this.setState((s) => ({ ind, sys: IND[ind].defSys, probs: s.probs.filter((p) => PROBS.find((x) => x.id === p).ind.includes(ind)) })); }
+  toggleSys(id) {
+    this.setState((s) => {
+      if (id === 'paper') return { sys: s.sys.includes('paper') ? [] : ['paper'] };
+      const next = s.sys.includes(id) ? s.sys.filter((x) => x !== id) : [...s.sys.filter((x) => x !== 'paper'), id];
+      return { sys: next };
+    });
+  }
+  readiness() {
+    const s = this.state;
+    const digital = s.sys.filter((x) => x !== 'paper').length;
+    const b = s.budget === '' ? null : Number(s.budget);
+    const reasons = [
+      ['Software you already use', Math.min(30, digital * 10), 30, digital ? `${digital} system${digital > 1 ? 's' : ''} for AI tools to plug into.` : 'Starting from paper is fine. We’ll pick tools that work on their own.'],
+      ['Comfort with new apps', [0, 8, 20, 30][Number(s.comfort)], 30, s.comfort === '1' ? 'We’ll favor tools with done-for-you setup.' : s.comfort === '2' ? 'Point-and-click setup will suit you.' : 'You can handle tools with more settings.'],
+      ['Time for setup', [0, 6, 16, 25][Number(s.setupTime)], 25, s.setupTime === '1' ? 'We’ll keep it to one tool at a time.' : s.setupTime === '2' ? 'A few hours over the first week works.' : 'You have room for a combined setup.'],
+      ['Budget room', b === null ? 8 : b >= 150 ? 15 : b >= 50 ? 10 : 5, 15, b === null ? 'No budget set, so we show low-cost options first.' : `Up to $${b}/month.`],
+    ];
+    const score = reasons.reduce((a, r) => a + r[1], 0);
+    const level = score < 40 ? 'Starter' : score < 70 ? 'Ready' : 'Advanced';
+    const key = level === 'Starter' ? 'simple' : level === 'Ready' ? 'balanced' : 'allin';
+    return { score, level, key, reasons };
+  }
+  simVals() {
+    const s = this.state; const d = SIMDEF[s.ind];
+    return Object.assign({ missed: 15, avg: d[0], catch: 80, buy: 50, hours: 3, saved: 50, hourly: d[1] }, s.sim[s.ind] || {});
+  }
+  simulate(x) {
+    const v = this.simVals(); const s = this.state;
+    const covered = new Set(); x.tools.forEach((t) => (COVERS[t.id] || []).forEach((p) => s.probs.includes(p) && covered.add(p)));
+    const callP = [...covered].some((p) => PHONE.includes(p));
+    const hourP = [...covered].filter((p) => !PHONE.includes(p)).length;
+    const caught = callP ? v.missed * v.catch / 100 : 0;
+    const callValue = caught * v.buy / 100 * v.avg;
+    const hoursSaved = hourP * v.hours * v.saved / 100;
+    const weekly = callValue + hoursSaved * v.hourly;
+    const monthly = weekly * 4.33;
+    return { covered, caught, callValue, hoursSaved, weekly, monthly, net: monthly - x.total };
+  }
+  speak(lines, id) {
+    const syn = window.speechSynthesis;
+    if (!syn) { this.setState({ driveLine: 0 }); return; }
+    syn.cancel();
+    lines.forEach((l, i) => {
+      const u = new SpeechSynthesisUtterance(l[1]);
+      u.rate = 1; u.pitch = l[0] === 'AI' ? 1.1 : 0.9;
+      u.onstart = () => this.setState({ driveLine: i });
+      if (i === lines.length - 1) u.onend = () => this.setState({ driveLine: -1 });
+      syn.speak(u);
+    });
+  }
+  buildRecipes() {
+    const s = this.state;
+    const ready = this.readiness();
+    const list = RECIPES[s.ind].map((r, idx) => {
+      const tools = r.tools.map((id) => { const t = T[id]; const b = badge(t, s.sys); return { id, t, b }; });
+      const zap = tools.some((x) => x.b.k === 'zapier');
+      const total = Math.round((tools.reduce((a, x) => a + x.t.price, 0) + (zap ? ZAP : 0)) * 100) / 100;
+      const fit = tools.reduce((a, x) => a + SCORE[x.b.k], 0) / tools.length - (total > Number(s.budget || 9999) * 1.5 ? 1 : 0);
+      return { r, idx, tools, zap, total, fit };
+    });
+    list.forEach((x) => { x.rank = x.fit + (x.r.key === ready.key ? 1.5 : 0); });
+    const sorted = [...list].sort((a, b) => b.rank - a.rank || a.idx - b.idx);
+    return sorted.map((x, i) => Object.assign(x, { rec: i === 0 }));
+  }
+  renderVals() {
+    const s = this.state;
+    const p = this.props;
+    const w = s.w || 1280;
+    const isDesk = w >= 900;
+    const ind = IND[s.ind];
+    const R = (k) => s.route === k;
+    const nav = [['picker', 'Find tools'], ['plan', 'My plan'], ['compare', 'Compare'], ['how', 'How we rank'], ['vendors', 'For vendors']];
+    const navItems = nav.map(([k, label]) => ({ label, onClick: () => this.go(k), current: (s.route === k || (k === 'picker' && R('profile'))) ? 'page' : undefined, bg: (s.route === k || (k === 'picker' && R('profile'))) ? '#ECEAE3' : 'transparent' }));
+    const hv = p.heroVariant || 'a';
+    const embedded = p.persist === false;
+    const frame = p.frame || 'auto';
+
+    const built = this.buildRecipes();
+    const budgetN = Number(s.budget || 0);
+    const recipes = built.map((x) => {
+      const [whole, cents] = money(x.total).split('.');
+      const verified = x.tools.filter((t) => t.b.k === 'verified').length;
+      const setupM = Math.max(...x.tools.map((t) => t.t.setup));
+      const trials = x.tools.filter((t) => t.t.trial).length;
+      const cancelYes = x.tools.every((t) => t.t.cancel === true);
+      const cancelNo = x.tools.some((t) => t.t.cancel === false);
+      return {
+        key: x.r.key, name: x.r.name, line: x.r.line, rec: x.rec, ring: x.rec ? '#16182D' : 'transparent',
+        headBg: x.rec ? '#F2FBCF' : '#fff', mobHead: x.rec ? '#D4F24A' : '#fff',
+        whole, cents: cents ? '.' + cents : '', total: money(x.total),
+        totalNote: x.zap ? `Includes Zapier ($29.99) · every fee we found` : `${x.tools.length} tools · every fee we found`,
+        tools: x.tools.map((t) => {
+          const fk = x.r.key + ':' + t.id; const fl = FINE[t.id] || []; const fineOpen = s.fine === fk; const driveOpen = s.drive === fk;
+          const lines = SCRIPT[s.ind].map((l) => [l[0], l[1].replace('{biz}', BIZ[s.ind])]);
+          return {
+            name: t.t.name, does: t.t.does, price: t.t.price === 0 ? (t.t.note || 'Free') : money(t.t.price) + '/mo', b: Object.assign({ text: t.b.text }, ST[t.b.k]),
+            hasFine: fl.length > 0, fineN: `Fine print (${fl.length})`, fineOpen, onFine: () => this.setState({ fine: fineOpen ? '' : fk }),
+            fine: fl.map(([k, text, src, url]) => Object.assign({ text, src, url }, KIND[k])),
+            canDrive: DRIVE.includes(t.id), driveOpen, onDrive: () => { if (driveOpen) { window.speechSynthesis && window.speechSynthesis.cancel(); } this.setState({ drive: driveOpen ? '' : fk, driveLine: -1 }); },
+            driveLabel: driveOpen ? 'Hide the call' : 'Hear it answer a call',
+            lines: lines.map((l, i) => ({ who: l[0] === 'AI' ? t.t.name : 'Caller', text: l[1], bg: s.driveLine === i && driveOpen ? '#BFEBFA' : l[0] === 'AI' ? '#fff' : 'transparent', align: l[0] === 'AI' ? 'flex-end' : 'flex-start' })),
+            play: () => this.speak(lines, fk), stop: () => { window.speechSynthesis && window.speechSynthesis.cancel(); this.setState({ driveLine: -1 }); },
+          };
+        }),
+        totalEl: React.createElement(Tween, { value: Math.floor(x.total) }),
+        why: (() => {
+          const out = [];
+          const nat = x.tools.filter((t) => t.b.k === 'verified');
+          if (nat.length) out.push(`${nat.length === x.tools.length ? 'Every tool connects' : nat.length + ' of ' + x.tools.length + ' tools connect'} directly to your software`);
+          const cov = new Set(); x.tools.forEach((t) => (COVERS[t.id] || []).forEach((p) => s.probs.includes(p) && cov.add(p)));
+          if (s.probs.length) out.push(`Covers ${cov.size} of the ${s.probs.length} problem${s.probs.length > 1 ? 's' : ''} you picked`);
+          if (budgetN) out.push(x.total <= budgetN ? `Fits your $${budgetN}/mo budget` : `${money(Math.round(x.total - budgetN))} over your budget`);
+          if (x.tools.some((t) => t.b.k === 'none')) out.push('One tool doesn’t connect to your setup. We still show it so you can decide');
+          return out.slice(0, 4).map((text, i) => ({ text, d: text.includes('over') || text.includes('doesn’t') ? ST.none.d : ST.verified.d, c: text.includes('over') || text.includes('doesn’t') ? ST.none.c : ST.verified.c }));
+        })(),
+        links: x.tools.map((t) => {
+          const k = t.b.k;
+          const to = k === 'verified' ? t.b.text.replace('Works with ', '') : k === 'zapier' ? 'Zapier → ' + SYS[t.b.sys].label : k === 'manual' ? 'Works on its own' : 'Not connected';
+          return { from: t.t.name, to, line: k === 'verified' ? '3px solid #17733F' : k === 'zapier' ? '3px dashed #9A5B00' : k === 'manual' ? '3px dotted #5B6170' : '3px solid transparent', c: ST[k].c, d: ST[k].d, toBg: ST[k].bg };
+        }),
+        showMap: s.fine === 'map:' + x.r.key, mapLabel: s.fine === 'map:' + x.r.key ? 'Hide how it connects' : 'How it connects', onMap: () => this.setState((st) => ({ fine: st.fine === 'map:' + x.r.key ? '' : 'map:' + x.r.key })),
+        estNet: (() => { const m = this.simulate(x).net; return (m < 0 ? '−' : '') + money(Math.abs(Math.round(m))); })(),
+        onDay: () => { this.setState({ dayKey: x.r.key, dayAfter: true }); this.go('day'); },
+        setup: setupText(setupM), trial: trials === x.tools.length ? 'Free to try' : trials ? `${trials} of ${x.tools.length} have a trial` : 'No free trial',
+        hours: x.r.hours, who: x.r.who, verified, n: x.tools.length, zap: x.zap, cancel: cancelYes ? 'Yes' : cancelNo ? 'One needs a contract' : 'Not stated for all',
+        overBudget: budgetN && x.total > budgetN,
+        onStart: () => { this.setState({ planKey: x.r.key, done: [], checkin: null }); this.go('plan'); },
+      };
+    });
+
+    const C = (v, k) => ({ v, d: k ? ST[k].d : '', ic: k ? ST[k].c : '' });
+    const cmpRows = [
+      { label: 'Monthly total', font: "700 40px/1 'Inter Tight',sans-serif", mfont: "700 26px/1.1 'Inter Tight',sans-serif", ls: '-0.04em', cells: recipes.map((r) => Object.assign(C(r.total), { bg: r.headBg })) },
+      { label: 'Tools', font: '500 16px/1.4 Inter,sans-serif', mfont: '500 15px/1.35 Inter,sans-serif', ls: '0', cells: recipes.map((r) => Object.assign(C(r.tools.map((t) => t.name).join(' + ')), { bg: r.headBg })) },
+      { label: 'Works with your software', font: '500 16px/1.4 Inter,sans-serif', mfont: '500 15px/1.35 Inter,sans-serif', ls: '0', cells: recipes.map((r) => Object.assign(C(`${r.verified} of ${r.n} connect directly`, r.verified === r.n ? 'verified' : r.verified ? 'manual' : 'none'), { bg: r.headBg })) },
+      { label: 'Needs Zapier', font: '500 16px/1.4 Inter,sans-serif', mfont: '500 15px/1.35 Inter,sans-serif', ls: '0', cells: recipes.map((r) => Object.assign(C(r.zap ? 'Yes, +$29.99/mo' : 'No', r.zap ? 'zapier' : null), { bg: r.headBg })) },
+      { label: 'Setup time', font: '500 16px/1.4 Inter,sans-serif', mfont: '500 15px/1.35 Inter,sans-serif', ls: '0', cells: recipes.map((r) => Object.assign(C(r.setup), { bg: r.headBg })) },
+      { label: 'Try before you pay', font: '500 16px/1.4 Inter,sans-serif', mfont: '500 15px/1.35 Inter,sans-serif', ls: '0', cells: recipes.map((r) => Object.assign(C(r.trial), { bg: r.headBg })) },
+      { label: 'Cancel anytime', font: '500 16px/1.4 Inter,sans-serif', mfont: '500 15px/1.35 Inter,sans-serif', ls: '0', cells: recipes.map((r) => Object.assign(C(r.cancel), { bg: r.headBg })) },
+      { label: 'Good if…', font: '500 16px/1.4 Inter,sans-serif', mfont: '500 15px/1.35 Inter,sans-serif', ls: '0', cells: recipes.map((r) => Object.assign(C(r.who), { bg: r.headBg })) },
+    ];
+
+    // plan
+    const planR = built.find((x) => x.r.key === s.planKey) || built[0];
+    const firstProb = PROBS.find((x) => x.id === s.probs[0]);
+    const cat = firstProb ? firstProb.cat : 'phones';
+    const lead = planR.tools[0];
+    const sysName = (planR.tools.map((t) => t.b).find((b) => b.k === 'verified') || { text: '' }).text.replace('Works with ', '').split(' + ')[0] || 'your software';
+    const stepsRaw = [...PLAN_T[cat], FINAL];
+    const planSteps = stepsRaw.map(([day, title, how], i) => {
+      const id = 's' + i; const done = s.done.includes(id);
+      return {
+        day: 'Day ' + day, title: title.replace('{tool}', lead.t.name).replace('{system}', sysName), how, done,
+        bg: done ? '#FAFAF7' : '#fff', boxBg: done ? 'var(--p,#4B3FE0)' : '#fff', boxBorder: done ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.3)', checkC: done ? '#fff' : 'transparent',
+        dayBg: day === 30 ? '#33C4F2' : '#ECEAE3', strike: done ? 'line-through' : 'none',
+        onToggle: () => this.setState((st) => ({ done: this.toggle(st.done, id) })),
+      };
+    });
+    const doneN = planSteps.filter((x) => x.done).length;
+    const pctNum = Math.round((doneN / planSteps.length) * 100);
+    const [pw, pc] = money(planR.total).split('.');
+    const planHead = { sub: `${planR.r.name} recipe · ${planR.tools.map((t) => t.t.name).join(' + ')}`, whole: pw, cents: pc ? '.' + pc : '', doneText: `${doneN} of ${planSteps.length} steps done`, pct: pctNum + '%', pctNum };
+    const shareText = `Hi, I'm starting to use AI tools at my ${ind.noun} and would love a second opinion.\n\nPlan: ${planR.r.name} — ${planR.tools.map((t) => t.t.name).join(', ')}\nMonthly total: ${money(planR.total)}\nMy software: ${s.sys.map((x) => SYS[x].label).join(', ') || 'none yet'}\n\nCould we go over setup together?`;
+    const checkOpts = [['keep', 'Keep it', 'Great. We’ll remind you to check again in 60 days.'], ['change', 'Change the settings', 'Good call. Revisit Day 2 and Day 14 steps above. Your SBDC advisor can help for free.'], ['cancel', 'Cancel before the next bill', 'Fair enough. Cancel in the tool’s billing page. Want to try the Simple recipe instead?']];
+    const checkins = checkOpts.map(([k, label]) => ({ label, on: s.checkin === k, border: s.checkin === k ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.18)', bg: s.checkin === k ? 'var(--pt,#EEEDFC)' : '#fff', dot: s.checkin === k ? 'var(--p,#4B3FE0)' : 'transparent', onClick: () => this.setState({ checkin: k }) }));
+    const checkinMsg = (checkOpts.find((o) => o[0] === s.checkin) || [])[2] || '';
+
+    // picker
+    const probRows = PROBS.filter((x) => x.ind.includes(s.ind) && (s.cat === 'all' || x.cat === s.cat || s.probs.includes(x.id))).map((x) => {
+      const on = s.probs.includes(x.id); const disabled = !on && s.probs.length >= 3;
+      return { label: (x.by && x.by[s.ind]) || x.label, cat: CAT[x.cat], on, disabled, op: disabled ? 0.5 : 1, border: on ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.16)', bg: on ? 'var(--pt,#EEEDFC)' : '#fff', box: on ? 'var(--p,#4B3FE0)' : '#fff', onClick: () => { if (!disabled) this.setState((st) => ({ probs: this.toggle(st.probs, x.id) })); } };
+    });
+    const lw = (s.words || '').toLowerCase();
+    const hits = lw.length > 3 ? PROBS.filter((x) => x.ind.includes(s.ind) && !s.probs.includes(x.id) && x.kw.some((k) => lw.includes(k))).map((x) => ((x.by && x.by[s.ind]) || x.label).toLowerCase()) : [];
+    const indTiles = Object.entries(IND).map(([k, v]) => ({ label: v.label, on: s.ind === k, sw: v.bg, border: s.ind === k ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.16)', tint: s.ind === k ? 'var(--pt,#EEEDFC)' : '#fff', onClick: () => this.setInd(k) }));
+    const sysTiles = Object.entries(SYS).filter(([k, v]) => v.ind.includes(s.ind)).map(([k, v]) => {
+      const on = s.sys.includes(k);
+      return { label: v.label, mark: on ? '✓' : v.mark, on, border: on ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.16)', bg: on ? 'var(--pt,#EEEDFC)' : '#fff', iconBg: on ? 'var(--p,#4B3FE0)' : '#EEEFF2', iconFg: on ? '#fff' : '#16182D', onClick: () => this.toggleSys(k) };
+    });
+    const opt = (field, list) => list.map(([v, label, sub]) => ({ label, sub, on: s[field] === v, border: s[field] === v ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.16)', bg: s[field] === v ? 'var(--pt,#EEEDFC)' : '#fff', onClick: () => this.setState({ [field]: v }) }));
+    const profileQs = [
+      { title: 'How many people work there?', opts: opt('size', [['solo', 'Just me', 'Owner-operator'], ['small', '2–10 people', 'Small team'], ['medium', '11–50 people', 'A few crews or shifts']]) },
+      { title: 'What could you spend each month?', opts: opt('budget', [['50', 'Under $50', 'Keep it cheap'], ['150', 'Up to $150', 'If it pays for itself'], ['400', 'Up to $400', 'For a big fix'], ['', 'Not sure yet', 'Show me everything']]) },
+      { title: 'How hands-on do you want to be?', opts: opt('comfort', [['1', 'Set it up for me', 'I’d rather have help'], ['2', 'I can follow steps', 'A checklist is fine'], ['3', 'I like figuring things out', 'Show me all the options']]) },
+      { title: 'How much time can you give setup in the first week?', opts: opt('setupTime', [['1', 'An hour or two', 'One tool at a time'], ['2', 'A few hours', 'Spread over the week'], ['3', 'A day or more', 'I can set up several']]) },
+    ];
+
+    // hero C
+    const heroMap = {
+      'missed-calls': { label: 'I miss calls during the rush', tool: 'Hostie AI', does: 'Answers calls and takes orders.', ids: ['hostie'] },
+      reviews: { label: 'Reviews pile up and I can’t reply', tool: 'NiceJob', does: 'Asks happy customers for reviews.', ids: ['nicejob'] },
+      bookkeeping: { label: 'Bookkeeping eats my evenings', tool: 'QuickBooks AI', does: 'Sorts expenses inside QuickBooks.', ids: ['intuit'] },
+    };
+    const heroChoices = Object.entries(heroMap).map(([k, v]) => ({ label: v.label, on: s.heroPick === k, border: s.heroPick === k ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.16)', bg: s.heroPick === k ? 'var(--pt,#EEEDFC)' : '#fff', dot: s.heroPick === k ? 'var(--p,#4B3FE0)' : 'transparent', onClick: () => this.setState({ heroPick: k }) }));
+    const hp = heroMap[s.heroPick] || heroMap['missed-calls'];
+    const ht = T[hp.ids[0]]; const hb = badge(ht, ['toast', 'quickbooks']);
+    const hTotal = ht.price + (hb.k === 'zapier' ? ZAP : 0);
+    const heroRes = { tool: hp.tool, does: hp.does, b: Object.assign({ text: hb.text }, ST[hb.k]), total: hTotal === 0 ? '$0' : money(Math.round(hTotal)), note: hb.k === 'zapier' ? 'incl. Zapier $29.99' : hTotal === 0 ? 'already in QuickBooks' : 'every fee we found' };
+
+    const areasDesk = '"r r t s" "r r l l"';
+    const industries = Object.entries(IND).map(([k, v]) => ({
+      label: v.label, example: v.example, sys: v.sys, bg: v.bg, area: { restaurant: 'r', hvac: 't', salon: 's', landscaping: 'l' }[k],
+      photo: k === 'restaurant' || !isDesk ? k === 'restaurant' : false, photoH: isDesk ? '260px' : '180px', photoId: 'ind-' + k, photoNote: v.photo,
+      minH: isDesk ? (k === 'restaurant' ? '520px' : '252px') : '200px',
+      onClick: () => { this.setInd(k); this.go('picker'); },
+    }));
+
+    const legend = Object.entries(ST).map(([k, v]) => ({ label: v.label, help: v.help, c: v.c, bg: v.bg, d: v.d, pts: v.pts }));
+
+    const vendorFields = [
+      { id: 'v-name', label: 'Tool name', type: 'text', req: true, ph: 'e.g. CallKeeper', help: '' },
+      { id: 'v-url', label: 'Website', type: 'url', req: true, ph: 'https://', help: '' },
+      { id: 'v-price', label: 'Lowest monthly price (USD)', type: 'number', req: false, ph: '49', help: 'Leave blank if you don’t publish it. We’ll show “Price not published.”' },
+      { id: 'v-proof', label: 'Link that shows the connection', type: 'url', req: false, ph: 'https://yourtool.com/help/toast', help: 'A help page or marketplace listing.' },
+    ];
+    const vendorSys = ['toast', 'square', 'clover', 'jobber', 'vagaro', 'quickbooks'].map((k) => { const on = s.vendorSys.includes(k); return { label: SYS[k].label, on, border: on ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.16)', bg: on ? 'var(--pt,#EEEDFC)' : '#fff', onClick: () => this.setState((st) => ({ vendorSys: this.toggle(st.vendorSys, k) })) }; });
+
+    // readiness
+    const rd = this.readiness();
+    const readyCard = {
+      score: rd.score, level: rd.level, showWhy: s.showWhy, whyLabel: s.showWhy ? 'Hide why' : 'Why this score?',
+      toggleWhy: () => this.setState((st) => ({ showWhy: !st.showWhy })),
+      plan: rd.key === 'simple' ? 'Start with one simple tool. We put the Simple recipe first and point you to free setup help.' : rd.key === 'balanced' ? 'A small set of tools that work together. We put Balanced first.' : 'You’re set up for a fuller setup. We put All-in first.',
+      reasons: rd.reasons.map(([label, pts, max, note]) => ({ label, note, pts: `${pts}/${max}`, pct: (pts / max) * 100 + '%' })),
+    };
+    // money leak + season
+    const sv = this.simVals();
+    const callP = s.probs.some((p) => PHONE.includes(p));
+    const hourP = s.probs.filter((p) => !PHONE.includes(p)).length;
+    const leakN = ((callP ? sv.missed * sv.buy / 100 * sv.avg : 0) + hourP * sv.hours * sv.hourly) * 4.33;
+    const leak = { total: money(Math.round(leakN)), basis: [callP ? `${sv.missed} missed calls a week, ${sv.buy}% buying, at $${sv.avg}` : '', hourP ? `${sv.hours} hrs a week on ${hourP === 1 ? 'one task' : hourP + ' tasks'} at $${sv.hourly}/hr` : ''].filter(Boolean).join(' · ') };
+    const se = SEASON[s.ind]; const seP = PROBS.find((x) => x.id === se[2]); const seLabel = (seP.by && seP.by[s.ind]) || seP.label;
+    const seIn = s.probs.includes(se[2]);
+    const season = { title: se[0], why: se[1], btn: seIn ? 'Already in your list' : s.probs.length >= 3 ? 'Your list is full (3)' : `Add “${seLabel}”`, disabled: seIn || s.probs.length >= 3, onAdd: () => { if (!seIn && s.probs.length < 3) this.setState((st) => ({ probs: [...st.probs, se[2]] })); } };
+    // day in the life
+    const dayR = built.find((x) => x.r.key === (s.dayKey || built[0].r.key)) || built[0];
+    const sim = this.simulate(dayR);
+    const covTool = (p) => { const t = dayR.tools.find((t) => (COVERS[t.id] || []).includes(p)); return t ? t.t.name : null; };
+    const dayEvents = DAY[s.ind].map(([time, p, before, after]) => {
+      const tool = covTool(p); const picked = s.probs.includes(p); const fixed = s.dayAfter && tool;
+      return { time, text: fixed ? after.replace('{tool}', tool) : before, tag: fixed ? 'Handled' : picked || tool ? (s.dayAfter ? 'Still on you' : 'Today') : 'Not on your list', bg: fixed ? '#E6F3EB' : '#fff', dotC: fixed ? '#17733F' : picked || tool ? '#C2362B' : '#5B6170', d: fixed ? ST.verified.d : picked || tool ? ST.none.d : 'M7 12h10', op: !picked && !tool ? 0.7 : 1 };
+    });
+    const setSim = (k) => (e) => { const v = Math.max(0, Number(e.target.value) || 0); this.setState((st) => ({ sim: Object.assign({}, st.sim, { [st.ind]: Object.assign({}, st.sim[st.ind] || {}, { [k]: v }) }) })); };
+    const simFields = [
+      ['missed', 'Missed calls a week', '', callP], ['avg', SIMDEF[s.ind][2], '$', callP], ['catch', 'Calls the AI catches', '%', callP], ['buy', 'Calls that turn into sales', '%', callP],
+      ['hours', 'Hours a week on each task', 'hrs', hourP > 0], ['saved', 'Time the AI saves', '%', hourP > 0], ['hourly', 'Your time is worth', '$/hr', hourP > 0],
+    ].filter((f) => f[3]).map(([k, label, unit]) => ({ id: 'sim-' + k, label, unit, value: sv[k], onChange: setSim(k) }));
+    const dayOut = {
+      name: dayR.r.name, net: (sim.net < 0 ? '−' : '') + money(Math.abs(Math.round(sim.net))), value: money(Math.round(sim.monthly)), cost: money(dayR.total),
+      weekly: money(Math.round(sim.weekly)), caught: Math.round(sim.caught) + ' calls', hours: (Math.round(sim.hoursSaved * 10) / 10) + ' hrs', positive: sim.net >= 0,
+      netNote: sim.net >= 0 ? 'left over each month after paying for the tools' : 'short each month. Try the Simple recipe or change the numbers.',
+    };
+    const dayRecipes = built.map((x) => ({ name: x.r.name, on: x === dayR, border: x === dayR ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.16)', bg: x === dayR ? 'var(--pt,#EEEDFC)' : '#fff', total: money(x.total) + '/mo', onClick: () => this.setState({ dayKey: x.r.key }) }));
+    const dayToggle = [[false, 'Today'], [true, 'With ' + dayR.r.name]].map(([v, label]) => ({ label, on: s.dayAfter === v, bg: s.dayAfter === v ? '#16182D' : 'transparent', fg: s.dayAfter === v ? '#fff' : '#16182D', onClick: () => this.setState({ dayAfter: v }) }));
+    // picker categories
+    const cats = [['all', 'All'], ...Object.entries(CAT)].filter(([k]) => k === 'all' || PROBS.some((x) => x.cat === k && x.ind.includes(s.ind))).map(([k, label]) => ({ label, on: s.cat === k, bg: s.cat === k ? '#16182D' : '#fff', fg: s.cat === k ? '#fff' : '#16182D', onClick: () => this.setState({ cat: k }) }));
+    // alerts
+    const alertWhere = [['email', 'Email', 'Email address', 'email', 'you@example.com'], ['text', 'Text message', 'Mobile number', 'tel', '(410) 555-0123']].map(([k, label, fl, type, ph]) => ({ label, on: s.alertWhere === k, bg: s.alertWhere === k ? 'var(--pt,#EEEDFC)' : '#fff', border: s.alertWhere === k ? 'var(--p,#4B3FE0)' : 'rgba(22,24,45,.16)', onClick: () => this.setState({ alertWhere: k }) }));
+    const aw = s.alertWhere === 'email' ? ['Email address', 'email', 'you@example.com'] : ['Mobile number', 'tel', '(410) 555-0123'];
+
+    return {
+      rootRef: this.rootRef,
+      liveMsg: recipes.length ? `Best fit for your setup: ${recipes[0].name}, ${recipes[0].total} a month.` : '',
+      best: recipes[0],
+      readyCard, leak, season, dayEvents, simFields, dayOut, dayRecipes, dayToggle, cats, alertWhere,
+      alertLabel: aw[0], alertType: aw[1], alertPh: aw[2], alertOn: s.alertOn, alertOff: !s.alertOn, alertTool: lead.t.name,
+      submitAlert: (e) => { e.preventDefault(); this.setState({ alertOn: true }); }, alertUndo: () => this.setState({ alertOn: false }),
+      needText: s.needText, onNeed: (e) => this.setState({ needText: e.target.value }), needSent: s.needSent, needForm: !s.needSent,
+      sendNeed: (e) => { e.preventDefault(); this.setState({ needSent: true }); },
+      goDay: () => { this.setState({ dayKey: s.planKey }); this.go('day'); }, startDay: () => { this.setState({ planKey: dayR.r.key, done: [], checkin: null }); this.go('plan'); },
+      r: { landing: R('landing'), picker: R('picker'), profile: R('profile'), results: R('results'), compare: R('compare'), plan: R('plan'), vendors: R('vendors'), how: R('how'), day: R('day') },
+      screenLabel: ROUTES[s.route] || 'Landing /',
+      outerBg: frame === 'auto' ? 'transparent' : '#E4E2DA', outerMinH: embedded ? '0' : '100vh',
+      frameMax: frame === '375' ? '375px' : frame === '1280' ? '1280px' : 'none',
+      headerPos: embedded ? 'relative' : 'sticky',
+      isDesk, isMobile: !isDesk, menuOpen: s.menu, showMenu: !isDesk && s.menu, menuLabel: s.menu ? 'Close' : 'Menu',
+      toggleMenu: () => this.setState((st) => ({ menu: !st.menu })),
+      navItems,
+      goLanding: () => this.go('landing'), goStart: () => this.go('picker'), goHow: () => this.go('how'), goProfile: () => s.probs.length && this.go('profile'),
+      goResults: () => this.go('results'), goCompare: () => this.go('compare'),
+      startOver: () => { this.setState({ ind: 'restaurant', probs: [], words: '', sys: [], done: [], checkin: null, planKey: 'balanced' }); this.go('landing'); },
+      heroA: hv === 'a', heroB: hv === 'b', heroC: hv === 'c',
+      stageH: isDesk ? '480px' : '500px', stageBH: isDesk ? '440px' : '500px', chipBTop: isDesk ? '90px' : '262px', recTopA: isDesk ? '96px' : '64px',
+      heroChoices, heroRes, heroGo: () => { this.setState({ ind: 'restaurant', probs: [s.heroPick], sys: ['toast', 'quickbooks'] }); this.go('results'); },
+      industries, bentoCols: isDesk ? 'repeat(4,minmax(0,1fr))' : 'minmax(0,1fr)', bentoAreas: isDesk ? areasDesk : '"r" "t" "s" "l"',
+      stats: [
+        { n: '73%', text: 'of small businesses say they’d benefit from more training and help to put AI to work.', src: 'Goldman Sachs 10,000 Small Businesses Voices, 2026', url: 'https://www.goldmansachs.com/community-transformation/10000-small-businesses-voices/insights/ai-presents-a-major-opportunity-for-small-businesses' },
+        { n: '41%', text: 'say it’s unclear how AI applies to their specific business.', src: 'U.S. Chamber of Commerce Foundation, 2026', url: 'https://www.uschamberfoundation.org/workforce/half-of-small-business-workers-use-ai-most-to-boost-productivity-not-automate-jobs' },
+        { n: '14%', text: 'have actually built AI into how their business runs day to day.', src: 'Goldman Sachs 10,000 Small Businesses Voices, 2026', url: 'https://www.goldmansachs.com/community-transformation/10000-small-businesses-voices/insights/ai-presents-a-major-opportunity-for-small-businesses' },
+      ],
+      trust: [
+        { title: 'No paid placement', text: 'Vendors can’t buy a better spot. Ever.', bg: '#E3F6FD', d: 'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z' },
+        { title: 'Real monthly totals', text: 'Add-ons, connector apps and usage fees included.', bg: '#33C4F2', d: 'M4 7h16M4 12h16M4 17h10' },
+        { title: 'Green means proven', text: '“Works with” only when we found a source.', bg: '#E6F3EB', d: 'M5 12.5l4.5 4.5L19 7.5' },
+        { title: 'Your answers stay with you', text: 'Saved on your phone. No account, no sales calls.', bg: '#ECEAE3', d: 'M7 11V8a5 5 0 0110 0v3M6 11h12v9H6z' },
+      ],
+      // picker
+      indTiles, probRows, pickCount: `${s.probs.length} of 3 picked`, noProbs: s.probs.length === 0, nextBg: s.probs.length ? 'var(--p,#4B3FE0)' : '#E2E0D8', nextFg: s.probs.length ? '#fff' : '#4A4D63',
+      words: s.words, onWords: (e) => this.setState({ words: e.target.value }), wordsHit: hits.join(', '),
+      sysTiles, profileQs,
+      // results
+      indNoun: ind.noun, pickedProbs: s.probs.map((id) => { const x = PROBS.find((q) => q.id === id); return (x.by && x.by[s.ind]) || x.label; }),
+      recipes, legend, cmpRows, cmpStickTop: '0px',
+      // plan
+      planCols: isDesk ? 'minmax(0,1fr) 380px' : 'minmax(0,1fr)', asidePos: isDesk && !embedded ? 'sticky' : 'static',
+      planHead, planSteps, shareOpen: s.share, toggleShare: () => this.setState((st) => ({ share: !st.share })), shareText,
+      mailto: 'mailto:?subject=' + encodeURIComponent('My Toolbelt plan — could you take a look?') + '&body=' + encodeURIComponent(shareText),
+      checkins, checkinMsg,
+      // vendors
+      vendorSteps: [
+        { n: 1, title: 'Tell us about your tool', text: 'Price, what it does, and which software it works with.', bg: '#E3F6FD' },
+        { n: 2, title: 'We check every claim', text: 'Prices and connections need a public source.', bg: '#33C4F2' },
+        { n: 3, title: 'Owners see it when it fits', text: 'Same Match score as everyone else. No fees, no boosts.', bg: '#ECEAE3' },
+      ],
+      vendorFields, vendorSys, vendorForm: !s.vendorSent, vendorSent: s.vendorSent,
+      submitVendor: (e) => { e.preventDefault(); this.setState({ vendorSent: true }); }, resetVendor: () => this.setState({ vendorSent: false, vendorSys: [] }),
+      // how
+      weights: [
+        ['Solves your problem', 30, 'How many of the problems you picked this tool covers.', 'var(--p,#4B3FE0)'],
+        ['Works with your software', 25, 'Direct connection 25 · through Zapier or works alongside 15 · not confirmed 8 · doesn’t connect 0.', '#17733F'],
+        ['Trust signals', 20, 'Publishes a price 8 · free trial or plan 6 · cancel anytime 6 (2 if not stated, 0 if a contract is required).', '#33C4F2'],
+        ['Fits your budget', 15, 'Full points within your budget, half up to 1.5× your budget, a third if the price isn’t published.', '#16182D'],
+        ['Setup matches your comfort', 10, 'Full points when setup effort is at or below the comfort level you chose.', '#5B6170'],
+      ].map(([label, pts, help, bg]) => ({ label, pts: pts + ' pts', pct: (pts / 30) * 100 + '%', help, bg })),
+      weightCols: isDesk ? '260px minmax(0,1fr)' : 'minmax(0,1fr)', weightHelpCol: isDesk ? '2' : '1',
+      promises: [
+        { title: 'Nothing is for sale', text: 'No ads, no affiliate boosts, no “featured” spots.', bg: '#E3F6FD' },
+        { title: 'We show our sources', text: 'Every price and connection links to where we found it.', bg: '#fff' },
+        { title: 'We say “not confirmed”', text: 'If a vendor won’t say, neither will we.', bg: '#fff' },
+        { title: 'No AI picks your tools', text: 'Your answers are matched with plain keyword rules and the math above. Phone demos are scripted and labeled.', bg: '#fff' },
+        { title: 'Prices are watched nightly', text: 'We re-check vendor price pages and a person reviews every change before it shows.', bg: '#fff' },
+        { title: 'Real results, when we have them', text: 'Day-30 check-ins become outcome data. Until then: “Not enough check-ins yet.”', bg: '#fff' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

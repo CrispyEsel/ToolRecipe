@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><style>body{margin:0;background:#E9E7E0;font-family:Inter,system-ui,sans-serif;color:#16182D}a{color:#4B3FE0}a:hover{color:#3A2FC4}</style></helmet>
+<section id="t2" style="padding:48px 56px 40px;border-bottom:1px solid rgba(0,0,0,.08)">
+  <div style="display:flex;align-items:baseline;gap:10px;margin:0 0 8px"><a href="#t2" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 7px;background:#16182D;color:#fff;border-radius:4px;text-decoration:none">2</a><span style="font:600 15px system-ui,sans-serif">Primary color — violet vs. deep teal vs. ink</span></div>
+  <p style="margin:0 0 28px;max-width:76ch;font:15px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.6)">Applied everywhere: green is now #17733F (5.9:1), Zapier amber #9A5B00. Lime means “best fit” only; sky carries info (seasons, Day 30, help). Lavender is gone. Results opens on an ink panel. Switch the primary with the “palette” tweak on the prototype.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+    <sc-for list="{{ palettes }}" as="p" hint-placeholder-count="3">
+      <div id="{{ p.id }}" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px;font:13px system-ui,sans-serif;color:rgba(0,0,0,.6)"><a href="#{{ p.id }}" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#16182D;border-radius:5px;text-decoration:none">{{ p.id }}</a><span style="width:14px;height:14px;border-radius:4px;background:{{ p.hex }}"></span>{{ p.label }}</div>
+        <div style="display:flex;gap:20px;align-items:flex-start">
+          <div style="width:375px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="landing" hero-variant="a" palette="{{ p.key }}" persist="{{ false }}" hint-size="375px,900px"></dc-import></div>
+          <div style="width:375px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="results" palette="{{ p.key }}" persist="{{ false }}" hint-size="375px,900px"></dc-import></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <p style="margin:28px 0 0;font:13px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.55)">Try next: "go with <a href="#2b">2b</a> everywhere" · "<a href="#2c">2c</a> but keep violet for links" · "show <a href="#2b">2b</a> at 1280"</p>
+</section>
+<section id="t1" style="padding:48px 56px 40px;border-bottom:1px solid rgba(0,0,0,.08)">
+  <div style="display:flex;align-items:baseline;gap:10px;margin:0 0 8px"><a href="#t1" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 7px;background:#16182D;color:#fff;border-radius:4px;text-decoration:none">1</a><span style="font:600 15px system-ui,sans-serif">Landing hero — 3 directions, each at 1280 and 375 · <strong>1a picked</strong></span></div>
+  <p style="margin:0 0 28px;max-width:70ch;font:15px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.6)">Every frame below is the live prototype — click around. Colors use your tokens; status colors sit in the icon disc with ink text beside them, because #1F8A4C on white is 4.4:1 (just under AA for small text). Photos are drop-in slots.</p>
+  <div style="display:flex;flex-direction:column;gap:48px">
+    <div id="1a" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px;font:13px system-ui,sans-serif;color:rgba(0,0,0,.6)"><a href="#1a" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#16182D;border-radius:5px;text-decoration:none">1a</a>Split · floating cards on a lime block (by the book)</div>
+      <div style="display:flex;gap:28px;align-items:flex-start">
+        <div style="width:1280px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="landing" hero-variant="a" persist="{{ false }}" hint-size="1280px,900px"></dc-import></div>
+        <div style="width:375px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="landing" hero-variant="a" persist="{{ false }}" hint-size="375px,900px"></dc-import></div>
+      </div>
+    </div>
+    <div id="1b" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px;font:13px system-ui,sans-serif;color:rgba(0,0,0,.6)"><a href="#1b" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#16182D;border-radius:5px;text-decoration:none">1b</a>Centered · owner photo on a sky stage, cards orbiting</div>
+      <div style="display:flex;gap:28px;align-items:flex-start">
+        <div style="width:1280px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="landing" hero-variant="b" persist="{{ false }}" hint-size="1280px,900px"></dc-import></div>
+        <div style="width:375px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="landing" hero-variant="b" persist="{{ false }}" hint-size="375px,900px"></dc-import></div>
+      </div>
+    </div>
+    <div id="1c" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px;font:13px system-ui,sans-serif;color:rgba(0,0,0,.6)"><a href="#1c" style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#16182D;border-radius:5px;text-decoration:none">1c</a>Problem-first · tap a problem, the card answers live</div>
+      <div style="display:flex;gap:28px;align-items:flex-start">
+        <div style="width:1280px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="landing" hero-variant="c" persist="{{ false }}" hint-size="1280px,900px"></dc-import></div>
+        <div style="width:375px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="landing" hero-variant="c" persist="{{ false }}" hint-size="375px,900px"></dc-import></div>
+      </div>
+    </div>
+  </div>
+  <p style="margin:28px 0 0;font:13px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.55)">Try next: "go with <a href="#1c">1c</a> but with the lime block from <a href="#1a">1a</a>" · "use <a href="#1b">1b</a> with a real photo" · "make the research band shorter"</p>
+</section>
+
+<section id="screens" style="padding:48px 56px 64px">
+  <div style="display:flex;align-items:baseline;gap:10px;margin:0 0 28px"><span style="font:600 11px ui-monospace,Menlo,monospace;padding:3px 7px;background:#16182D;color:#fff;border-radius:4px">Flow</span><span style="font:600 15px system-ui,sans-serif">Every screen at 1280 and 375 (sample: café using Toast + QuickBooks)</span></div>
+  <div style="display:flex;flex-direction:column;gap:56px">
+    <sc-for list="{{ screens }}" as="s" hint-placeholder-count="7">
+      <div id="{{ s.id }}" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:baseline;gap:10px"><span style="font:700 22px 'Inter Tight',system-ui,sans-serif">{{ s.name }}</span><code style="font:13px ui-monospace,Menlo,monospace;color:rgba(0,0,0,.55)">{{ s.route }}</code></div>
+        <div style="display:flex;gap:28px;align-items:flex-start">
+          <div style="width:1280px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="{{ s.key }}" persist="{{ false }}" hint-size="1280px,900px"></dc-import></div>
+          <div style="width:375px;flex:none;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)"><dc-import name="Toolbelt" screen="{{ s.key }}" persist="{{ false }}" hint-size="375px,900px"></dc-import></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      palettes: [
+        { id: '2a', key: 'violet', hex: '#4B3FE0', label: 'Violet #4B3FE0 (current) — energetic, a bit “app”' },
+        { id: '2b', key: 'teal', hex: '#0E6470', label: 'Deep teal #0E6470 — calm, advisor-like, 7.3:1' },
+        { id: '2c', key: 'ink', hex: '#16182D', label: 'Ink #16182D — most sober; lime does all the color work' },
+      ],
+      screens: [
+        ['picker', 'Problem picker', '/start · step 1'],
+        ['profile', 'Quick profile', '/start · step 2'],
+        ['results', 'Results', '/results'],
+        ['day', 'Day in the life', '/day'],
+        ['compare', 'Compare', '/compare'],
+        ['plan', 'My plan', '/plan'],
+        ['vendors', 'Vendors', '/vendors'],
+        ['how', 'How we rank', '/how-we-rank'],
+      ].map(([key, name, route]) => ({ key, name, route, id: 'screen-' + key })),
+    };
+  }
+}
+</script>
+</body>
+</html>
