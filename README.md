@@ -2,17 +2,17 @@
 
 Team Google Drive: https://drive.google.com/drive/u/1/folders/1nFHR5cwh3xGbHF1T-pu24pOK14E1jHN2
 
-**Tell ToolRecipe what's eating your week and what software you already use. It shows AI tools that work together with your setup, what they'll really cost each month, and a 30-day plan to start.**
+**Tell us what's eating your week and what software you already use. We show AI tools that work together with your setup, what they'll really cost each month, and a 30-day plan to start.**
 
-Prototype for the UMD Smith AI for Small Business Hack-a-thon (Fall 2026).
+NOTE: This project is the prototype for the UMD Smith AI for Small Business Hack-a-thon (Fall 2026).
 
 ## The flow
 
-1. **Business type**: restaurant/café, HVAC/trades, salon, landscaping, or **Something else** (type any profession and pick the closest business type: appointments, going to job sites, or a shop customers visit). "Something else" only sees tools that work for any business, generic wording, and starting numbers for its type, and each request is logged so the most-asked profession gets added next. Four **example businesses** on the home page (including Paws & Suds, a dog groomer) open straight to results with conservative numbers.
-2. **Problem category**: phones, scheduling, money, marketing, or office work
-3. **Problem in your own words**: tap up to 3 problems. The optional free text is read with keyword rules, which pick up extra problems and numbers such as "20 calls a night".
-4. **AI readiness quiz**: covers Stack Snap (the software you use), comfort with new apps, budget, setup time, and how careful you need to be with customer data. It produces an "AI starting point" score that decides which recipe is suggested first.
-5. **Recipes**: Simple, Balanced, and All-in combinations. Each shows compatibility badges, the real monthly total (including Zapier and fees tied to your software), setup time, a Fit & Trust score, a "Why we picked this" list, and a **stack map** that draws each tool's real connections to your software (solid = direct, dashed = through Zapier, no line = works on its own) and redraws when you change Stack Snap. A **money-leak** line above the recipes estimates what the problems may cost today, using the same numbers as Day in the life. **Coming up for you** cards flag seasonal crunches for your industry (holidays, prom, cold snaps, spring rush) and add the matching problem in one tap.
+1. **Identify Business type**: restaurant/café, HVAC/trades, salon, landscaping, or Something else (type any profession and pick the closest business type: appointments, going to job sites, or a shop customers visit). "Something else" only sees tools that work for any business, generic wording, and starting numbers for its type, and each request is logged so the most-asked profession gets added next. We also included example businesses and made-up problems for testers on the home page which jumps straight to the result page.
+2. **Identify Problem category**: phones, scheduling, money, marketing, or office work
+3. **What is the problem in your own words?**: tap up to 3 problems. The optional free text is read with keyword rules, which pick up extra problems and numbers such as "20 calls a night".
+4. **AI readiness**: covers software already being used by you, comfort with new apps, budget, setup time, and how careful you need to be with customer data (privacy). It produces an "AI starting point" score that decides which recipe is suggested first.
+5. **Recipes**: Based on the AI starting point score we recommend simple, balanced, and all-in combinations. Each shows compatibility badges, the real monthly total (including Zapier and fees tied to your software), setup time, a Fit & Trust score, a "Why we picked this" list, and a **map** that draws each tool's real connections to your software (solid = direct, dashed = through Zapier, no line = works on its own) and redraws when you change Stack Snap. A **money-leak** line above the recipes estimates what the problems may cost today, using the same numbers as Day in the life. **Coming up for you** cards flag seasonal crunches for your industry (holidays, prom, cold snaps, spring rush) and add the matching problem in one tap.
 6. **Day in the life**: a before/after timeline of a typical day, plus a weekly value estimate built from editable inputs. Edits are saved and feed the money-leak line.
 7. **Compare**: recipes or tools side by side, with the same rows for every option.
 8. **30-day plan**: checkable steps, free setup help (Maryland SBDC, SCORE), a "share with my SBDC advisor" email, and a day-30 check-in where you can also retake the readiness quiz.
@@ -31,10 +31,8 @@ Also: **Hear it answer your phone** (a simulated call for the owner's business, 
 ```bash
 npm install
 npm run dev        # local dev server
-npm run build      # production build in dist/
-npm run scenarios  # prints recipes for the judge test scenarios
+o + enter          # Runs the project on your local browser
 ```
-
 Deploy: import the repo in Vercel and use the default Vite settings (build `npm run build`, output `dist`).
 
 ## Architecture
@@ -56,5 +54,3 @@ React + TypeScript + Tailwind (Vite). The catalog lives in typed data files, the
 | `src/lib/business.ts` | "Something else" professions: business types, general tools, generic wording |
 | `src/lib/freshness.ts` | "Checked X days ago" and the 90-day staleness rule |
 | `src/data/examples.ts` | Example businesses for demos |
-
-**Production path:** the data files become a Postgres catalog, the engine becomes an API, vendor submissions go into a human verification queue, and day-30 check-ins become real outcome data.
