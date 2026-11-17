@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+@theme {
+  /* Smallest text is 14.4px (0.8rem of the 18px base), never smaller */
+  --text-xs: 0.8rem;
+  --text-xs--line-height: 1.35;
+  /* ToolRecipe palette */
+  --color-ink: #1a2233; /* text, dark bands */
+  --color-ink-soft: #4b5263; /* muted text */
+  --color-paper: #f3f0e8; /* canvas */
+  --color-card: #ffffff; /* surface */
+  --color-line: #e2ddd1;
+  --color-brand: #24406b; /* primary: buttons, links */
+  --color-brand-dark: #1b3254; /* primary hover */
+  --color-brand-soft: #e4eaf4; /* primary tint: selected */
+  --color-accent: #ffd84d; /* best fit: only with dark text */
+  --color-accent-soft: #fff4c7; /* best fit tint */
+  --color-gold-dark: #8a6a00;
+  --color-fog: #c9cfdc; /* muted text on dark */
+  --color-ok: #17733f; /* works with */
+  --color-ok-soft: #dcefe3;
+  --color-warn: #9a5b00; /* works through Zapier */
+  --color-warn-soft: #fbefd6;
+  --color-bad: #c2362b; /* doesn't connect */
+  --color-bad-soft: #f9e2df;
+  --color-info: #24406b;
+  --color-info-soft: #c7d7ee;
+  --color-muted: #5b6170; /* manual setup */
+  --color-muted-soft: #e8e5dc;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter Tight Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  font-size: 18px;
+}
+
+/* On laptops and desktops, show the whole site at 75%, the same as zooming the
+   browser out to 75%. Phones and tablets keep full size. Change --ui-scale to
+   adjust (0.9 = 90%). */
+:root {
+  --ui-scale: 1;
+}
+@media (min-width: 1024px) {
+  :root {
+    --ui-scale: 0.75;
+  }
+  html {
+    zoom: var(--ui-scale);
+  }
+}
+/* Full-height page shell that still fills the screen when zoomed */
+.app-shell {
+  min-height: calc(100vh / var(--ui-scale));
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    animation: fade-in 0.35s ease both;
+  }
+  .pop {
+    animation: pop 0.3s ease both;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.96);
+  }
+  60% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+input[type="range"] {
+  accent-color: var(--color-brand);
+}
+/* Bigger slider: 44px tall touch area, 28px thumb */
+.range-lg {
+  height: 44px;
+  cursor: pointer;
+}
+.range-lg::-webkit-slider-thumb {
+  width: 28px;
+  height: 28px;
+}
+
+/* Gold focus ring on dark surfaces (header, footer, dark heroes) */
+.on-dark :focus-visible,
+.bg-ink :focus-visible,
+.bg-brand :focus-visible,
+.bg-brand-dark :focus-visible {
+  outline-color: var(--color-accent);
+}
+
+/* Checkbox rows: show the ring on the whole row */
+.row-focus:focus-within {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+/* Stack map: lines draw in when the map redraws */
+@media (prefers-reduced-motion: no-preference) {
+  .map-draw {
+    stroke-dasharray: 700;
+    stroke-dashoffset: 700;
+    animation: map-draw 0.8s ease forwards;
+  }
+  .map-fade {
+    animation: fade-in 0.6s ease both;
+  }
+}
+@keyframes map-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Full-width section bands inside the centered layout, without horizontal scroll */
+.band {
+  background: var(--band-bg);
+  box-shadow: 0 0 0 100vmax var(--band-bg);
+  clip-path: inset(0 -100vmax);
+}
+.band-white {
+  --band-bg: #ffffff;
+}
+.band-ink {
+  --band-bg: var(--color-ink);
+}
+
+
+/* Clickable cards lift slightly; static cards stay flat */
+.lift {
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.05),
+    0 2px 8px rgb(0 0 0 / 0.04);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+.lift:hover {
+  box-shadow:
+    0 2px 4px rgb(0 0 0 / 0.06),
+    0 10px 24px rgb(0 0 0 / 0.08);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lift:hover {
+    transform: translateY(-2px);
+  }
+}
